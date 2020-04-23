@@ -5,6 +5,8 @@ This web browser is really basic but one didn't exist for the Xbox Game Bar at t
 
 Currently, this browser uses the EdgeHTML WebView as it was the easiest to implement. If this app actually gains some popularity, I'll consider trying to implement Gecko or Chromium.
 
+I tried adding it to the Microsoft Store but the certification process always fails as it doesn't show up in the Widget menu for the tester, even though it shows up fine for me.
+
 ## Current features
 - URL
 - Bing search (as it was the easiest to implement)
