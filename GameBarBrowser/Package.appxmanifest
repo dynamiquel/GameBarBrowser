@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap uap3 mp">
 
   <Identity
-    Name="deea19aa-0534-4ac6-b55e-846144b232d2"
-    Publisher="CN=Liamk"
+    Name="61449LiamHall.GameBarBrowser"
+    Publisher="CN=555D21B8-0A4C-477E-8B9B-BEE2FEE87CE2"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="deea19aa-0534-4ac6-b55e-846144b232d2" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="1b6e4fd3-3294-4366-98d4-a25d2cb89488" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>GameBarBrowser</DisplayName>
-    <PublisherDisplayName>liamhall</PublisherDisplayName>
+    <DisplayName>Game Bar Browser</DisplayName>
+    <PublisherDisplayName>Liam Hall</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -53,7 +53,7 @@
       <Extensions>
         <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="microsoft.gameBarUIExtension"
-                             Id="YourUniqueIdHere"
+                             Id="9NK1CNB0NCCX"
                              DisplayName="Browser"
                              Description="Browse the web."
                              PublicFolder="GameBar\Ext1">
