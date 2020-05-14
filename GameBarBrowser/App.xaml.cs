@@ -18,12 +18,17 @@ using Microsoft.Gaming.XboxGameBar;
 
 namespace GameBarBrowser
 {
+    public static class WidgetArgs
+    {
+        public static XboxGameBarWidgetActivatedEventArgs widgetArgs = null;
+    }
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
     sealed partial class App : Application
     {
         private XboxGameBarWidget browserWidget = null;
+        private XboxGameBarWidget settingsWidget = null;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -33,6 +38,8 @@ namespace GameBarBrowser
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+
+            UserSettings.LoadUserSettings();
         }
 
         protected override void OnActivated(IActivatedEventArgs args)
@@ -45,6 +52,7 @@ namespace GameBarBrowser
                 if (scheme.Equals("ms-gamebarwidget"))
                 {
                     widgetArgs = args as XboxGameBarWidgetActivatedEventArgs;
+                    WidgetArgs.widgetArgs = widgetArgs;
                 }
             }
             if (widgetArgs != null)
@@ -78,14 +86,28 @@ namespace GameBarBrowser
                     rootFrame.NavigationFailed += OnNavigationFailed;
                     Window.Current.Content = rootFrame;
 
-                    // Create Game Bar widget object which bootstraps the connection with Game Bar
-                    browserWidget = new XboxGameBarWidget(
-                        widgetArgs,
-                        Window.Current.CoreWindow,
-                        rootFrame);
-                    rootFrame.Navigate(typeof(BrowserWidget));
+                    if (widgetArgs.AppExtensionId == "BrowserWidget")
+                    {
+                        // Create Game Bar widget object which bootstraps the connection with Game Bar
+                        browserWidget = new XboxGameBarWidget(
+                            widgetArgs,
+                            Window.Current.CoreWindow,
+                            rootFrame);
+                        rootFrame.Navigate(typeof(BrowserWidget), browserWidget);
 
-                    Window.Current.Closed += Widget1Window_Closed;
+                        Window.Current.Closed += BrowserWidgetWindow_Closed;
+                    }
+                    else if (widgetArgs.AppExtensionId == "SettingsWidget")
+                    {
+                        // Create Game Bar widget object which bootstraps the connection with Game Bar
+                        settingsWidget = new XboxGameBarWidget(
+                            widgetArgs,
+                            Window.Current.CoreWindow,
+                            rootFrame);
+                        rootFrame.Navigate(typeof(SettingsWidget));
+
+                        Window.Current.Closed += SettingsWidgetWindow_Closed;
+                    }
 
                     Window.Current.Activate();
                 }
@@ -96,10 +118,16 @@ namespace GameBarBrowser
             }
         }
 
-        private void Widget1Window_Closed(object sender, Windows.UI.Core.CoreWindowEventArgs e)
+        private void BrowserWidgetWindow_Closed(object sender, Windows.UI.Core.CoreWindowEventArgs e)
         {
             browserWidget = null;
-            Window.Current.Closed -= Widget1Window_Closed;
+            Window.Current.Closed -= BrowserWidgetWindow_Closed;
+        }
+
+        private void SettingsWidgetWindow_Closed(object sender, Windows.UI.Core.CoreWindowEventArgs e)
+        {
+            settingsWidget = null;
+            Window.Current.Closed -= SettingsWidgetWindow_Closed;
         }
 
         /// <summary>
@@ -109,7 +137,7 @@ namespace GameBarBrowser
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            var rootFrame = Window.Current.Content as Frame;
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
@@ -164,6 +192,8 @@ namespace GameBarBrowser
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
+            browserWidget = null;
+            settingsWidget = null;
             deferral.Complete();
         }
     }

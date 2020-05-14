@@ -1,0 +1,48 @@
+﻿<Page
+    x:Class="GameBarBrowser.SettingsWidget"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GameBarBrowser"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontWeight="SemiBold">
+
+    
+    <StackPanel Orientation="Vertical" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Width="300" 
+                Padding="16">
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+            <Button x:Name="quitButton"  
+                    ToolTipService.ToolTip="Exit the settings"
+                    Click="quitButton_Click"
+                    Height="40"
+                    Width="40">
+                <SymbolIcon Symbol="Back"/>
+            </Button>
+            <TextBlock Text="Settings" 
+                       VerticalAlignment="Center" 
+                       Margin="16,0,0,0" 
+                       FontSize="24"/>
+        </StackPanel>
+        
+        <TextBlock Text="Homepage" Margin="0,0,0,8"/>
+        <TextBox Name="homePageURLTextBox" 
+                 Text="https://www.bing.com" 
+                 TextChanged="homePageURLTextBox_TextChanged"/>
+
+        <TextBlock Text="Search Engine" Margin="0,16,0,8"/>
+        <ComboBox Name="searchEngineComboBox" 
+                  SelectedIndex="0" 
+                  SelectionChanged="searchEngineComboBox_SelectionChanged" 
+                  HorizontalAlignment="Stretch">
+            <ComboBox.Items>
+                <ComboBoxItem Content="Bing"/>
+                <ComboBoxItem Content="Google"/>
+                <ComboBoxItem Content="DuckDuckGo"/>
+            </ComboBox.Items>
+        </ComboBox>
+    </StackPanel>
+</Page>

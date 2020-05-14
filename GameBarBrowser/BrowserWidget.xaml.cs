@@ -1,5 +1,10 @@
-﻿using System;
+﻿using Microsoft.Gaming.XboxGameBar;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.Gaming.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -14,106 +19,222 @@ namespace GameBarBrowser
     /// </summary>
     public sealed partial class BrowserWidget : Page
     {
-        string homeURL = "https://www.bing.com/";
-        bool refreshButtonState = true;
-        WebView webView;
+        List<TabGroup> tabGroups;
+        TabGroup focusedTabGroup;
 
+        TabGroup developingTabGroup;
+        
         public BrowserWidget()
         {
             this.InitializeComponent();
 
-            webView = new WebView(WebViewExecutionMode.SameThread);
-            Grid.SetRow(webView, 1);
-            tabView.Children.Add(webView);
+            /*webView = new WebView(WebViewExecutionMode.SameThread);
+            Grid.SetRow(webView, 0);
+            //contentFrame.Children.Add(webView);
 
             webView.NavigationStarting += OnNavigationStart;
             webView.NavigationCompleted += OnNavigationComplete;
 
             webView.Focus(FocusState.Keyboard);
-            Task.Run(() => FocusWebView());
+            Task.Run(() => FocusWebView());*/
 
-            Query(homeURL);
+            tabGroups = new List<TabGroup>();
+
+            CreateTab();
+
+            Query(UserSettings.HomeURL);
         }
 
-        private async Task FocusWebView()
+        private TabGroup GetTabGroup(WebViewPage webViewPage)
         {
-            await webView.InvokeScriptAsync(@"eval", new string[] { "document.focus()" });
+            if (tabGroups.Count < 1)
+                return null;
+
+            return tabGroups.First(tabG => tabG.WebViewPage == webViewPage);       
+        }
+
+        private TabGroup GetTabGroup(Tab tab)
+        {
+            return tabGroups.First(tabG => tabG.Tab == tab);
+        }
+
+        private void CreateTab()
+        {
+            AB_searchBox.PlaceholderText = $"Search with {UserSettings.SearchEngine} or enter address";
+
+            tabGroups.ForEach(t => t.Tab.Active = false);
+
+            developingTabGroup = new TabGroup();
+
+            var tabFrame = new Frame();
+            tabFrame.CacheSize = 1;
+
+            tabs.Children.Add(tabFrame);
+
+            tabFrame.Navigated += TabFrame_Navigated;
+            tabFrame.Navigate(typeof(Tab));
+            tabFrame.Navigated -= TabFrame_Navigated;
+
+            var webViewFrame = new Frame();
+            webViewFrame.CacheSize = 1;
+            Grid.SetRow(webViewFrame, 0);
+            content.Children.Add(webViewFrame);
+
+            webViewFrame.Navigated += ContentFrame_Navigated;
+            webViewFrame.Navigate(typeof(WebViewPage));
+            webViewFrame.Navigated -= ContentFrame_Navigated;
+
+            tabGroups.Add(developingTabGroup);
+            focusedTabGroup = developingTabGroup;
+            focusedTabGroup.Tab.Active = true;
+            focusedTabGroup.WebViewPage.Query(UserSettings.HomeURL);
+            //developingTabGroup = null;
+        }
+
+        private void TabFrame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            var tab = e.Content as Tab;
+            developingTabGroup.Tab = tab;
+
+            developingTabGroup.Tab.TabOpenClick += Tab_TabOpenClick;
+            developingTabGroup.Tab.TabCloseClick += Tab_TabCloseClick;
+        }
+
+        private void Tab_TabCloseClick(Tab obj)
+        {
+            var tabG = GetTabGroup(obj);
+            int tabIndex = tabGroups.IndexOf(tabG);
+
+            tabs.Children.Remove(tabG.Tab.Frame);
+            content.Children.Remove(tabG.WebViewPage.Frame);
+            tabG.WebViewPage.Frame.Content = null;
+            tabG.WebViewPage = null;
+            tabG.Tab = null;
+            tabGroups.Remove(tabG);
+
+            if (obj != focusedTabGroup.Tab)
+            {
+                if (tabIndex > 0)
+                    Tab_TabOpenClick(tabGroups[tabIndex - 1].Tab);
+            }
+
+            if (tabGroups.Count < 1)
+                CreateTab();
+        }
+
+        private void Tab_TabOpenClick(Tab obj)
+        {
+            tabGroups.ForEach(t => t.Tab.Active = false);
+            obj.Active = true;
+
+            tabGroups.ForEach(t => t.WebViewPage.Frame.Visibility = Visibility.Collapsed);
+
+            var tg = GetTabGroup(obj);
+            tg.WebViewPage.Frame.Visibility = Visibility.Visible;
+            tg.WebViewPage.Focus(FocusState.Keyboard);
+        }
+
+        private void ContentFrame_Navigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
+        {
+            var webViewPage = e.Content as WebViewPage;
+            developingTabGroup.WebViewPage = webViewPage;
+
+            webViewPage.OnNavigationStart += HandleNavigationStart;
+            webViewPage.OnNavigationComplete += HandleNavigationComplete;         
+
+            Window.Current.Activate();
+        }
+
+        private void HandleNavigationStart(WebViewPage webViewPage)
+        {
+            if (focusedTabGroup == null)
+                return;
+
+            if (webViewPage == focusedTabGroup.WebViewPage)
+            {
+                AB_backButton.IsEnabled = focusedTabGroup.WebViewPage.CanGoBack;
+                AB_forwardButton.IsEnabled = focusedTabGroup.WebViewPage.CanGoForward;
+                AB_searchBox.Text = focusedTabGroup.WebViewPage.URL;
+                UpdateRefreshButton(true);
+            }
+
+            GetTabGroup(webViewPage).Tab.PageName = "Loading...";
+        }
+
+        private void HandleNavigationComplete(WebViewPage webViewPage)
+        {
+            if (focusedTabGroup == null)
+                return; 
+
+            if (webViewPage == focusedTabGroup.WebViewPage)
+            {
+                AB_backButton.IsEnabled = focusedTabGroup.WebViewPage.CanGoBack;
+                AB_forwardButton.IsEnabled = focusedTabGroup.WebViewPage.CanGoForward;
+                AB_searchBox.Text = focusedTabGroup.WebViewPage.URL;
+                UpdateRefreshButton(false);
+            }
+
+            var tabGroup = GetTabGroup(webViewPage);
+            tabGroup.Tab.PageName = webViewPage.DocumentTitle;
+
+            if (tabGroup.Tab.Favicon != null)
+                tabGroup.Tab.Favicon.Source = new BitmapImage(new Uri($"https://www.google.com/s2/favicons?domain={focusedTabGroup.WebViewPage.URL}"));
         }
 
         private void Query(string url)
         {
-            if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
-                webView.Navigate(new Uri(url));
-            else
-                webView.Navigate(new Uri($"https://www.bing.com/search?q={url}"));
+            focusedTabGroup.WebViewPage?.Query(url);
         }
 
-        private void UpdateRefreshButton(bool isRefresh)
+        private void UpdateRefreshButton(bool isLoading)
         {
-            if (isRefresh)
+            if (isLoading)
             {
-                refreshButtonState = true;
+                AB_refreshButton.Content = "Stop";
+                var symbol = new SymbolIcon();
+                symbol.Symbol = Symbol.Cancel;
+                AB_refreshButton.Icon = symbol;          
+            }
+            else
+            {
                 AB_refreshButton.Content = "Refresh";
                 var symbol = new SymbolIcon();
                 symbol.Symbol = Symbol.Refresh;
                 AB_refreshButton.Icon = symbol;
             }
-            else
-            {
-                refreshButtonState = false;
-                AB_refreshButton.Content = "Stop";
-                var symbol = new SymbolIcon();
-                symbol.Symbol = Symbol.Cancel;
-                AB_refreshButton.Icon = symbol;
-            }
         }
 
-        private void OnNavigationStart(WebView webView, WebViewNavigationStartingEventArgs args)
-        {
-            UpdateRefreshButton(false);
-            AB_backButton.IsEnabled = webView.CanGoBack;
-            AB_forwardButton.IsEnabled = webView.CanGoForward;
-            AB_searchBox.Text = args.Uri.ToString();
-            pageName.Text = "Loading...";
-        }
+        #region Button Events
 
-        private void OnNavigationComplete(WebView webView, WebViewNavigationCompletedEventArgs args)
+        private void newTabButton_Click(object sender, RoutedEventArgs e)
         {
-            UpdateRefreshButton(true);
-            AB_backButton.IsEnabled = webView.CanGoBack;
-            AB_forwardButton.IsEnabled = webView.CanGoForward;
-            AB_searchBox.Text = args.Uri.ToString();
-            pageName.Text = webView.DocumentTitle;
-            favicon.Source = new BitmapImage(new Uri($"https://www.google.com/s2/favicons?domain={args.Uri.ToString()}"));
+            CreateTab();
         }
 
         private void AB_backButton_Click(object sender, RoutedEventArgs e)
         {
-            if (webView.CanGoBack)
-                webView.GoBack();
+            if (focusedTabGroup.WebViewPage != null && focusedTabGroup.WebViewPage.CanGoBack)
+                focusedTabGroup.WebViewPage.GoBack();
             else
                 AB_backButton.IsEnabled = false;
         }
 
         private void AB_forwardButton_Click(object sender, RoutedEventArgs e)
         {
-            if (webView.CanGoForward)
-                webView.GoForward();
+            if (focusedTabGroup.WebViewPage != null && focusedTabGroup.WebViewPage.CanGoForward)
+                focusedTabGroup.WebViewPage.GoForward();
             else
                 AB_forwardButton.IsEnabled = false;
         }
 
         private void AB_refreshButton_Click(object sender, RoutedEventArgs e)
         {
-            if (refreshButtonState)
-                webView.Refresh();
-            else
-                webView.Stop();
+            focusedTabGroup.WebViewPage?.Refresh();
         }
 
         private void AB_homeButton_Click(object sender, RoutedEventArgs e)
         {
-            webView.Navigate(new Uri(homeURL));
+            Query(UserSettings.HomeURL);
         }
 
         private void AB_searchBox_KeyDown(object sender, KeyRoutedEventArgs e)
@@ -125,6 +246,19 @@ namespace GameBarBrowser
         private void AB_searchButton_Click(object sender, RoutedEventArgs e)
         {
             Query(AB_searchBox.Text);
+        }
+
+        #endregion
+
+        // Workaround for the 'Game Bar options' button not working.
+        private Microsoft.Gaming.XboxGameBar.XboxGameBarWidget settingsWidget = null;
+        private void AB_settingsButton_Click(object sender, RoutedEventArgs e)
+        {
+            var settingsFrame = new Frame();
+            content.Children.Add(settingsFrame);
+
+            settingsFrame.Navigate(typeof(SettingsWidget), null);
+            Window.Current.Activate();
         }
     }
 }
