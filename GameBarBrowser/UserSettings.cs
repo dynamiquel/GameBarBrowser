@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace GameBarBrowser
 {
@@ -15,8 +16,8 @@ namespace GameBarBrowser
 
                 _homeURL = value;
 
-                var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values["homePage"] = _homeURL;
+                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                storedSettings.Values["homePage"] = _homeURL;
             }
         }
 
@@ -27,8 +28,7 @@ namespace GameBarBrowser
             set
             {
                 _searchEngine = value;
-                var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-                localSettings.Values["searchEngine"] = (int)_searchEngine;
+                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
 
                 switch (_searchEngine)
                 {
@@ -46,36 +46,37 @@ namespace GameBarBrowser
                         break;
                 }
 
-                Console.WriteLine(_searchEngine);
+                storedSettings.Values["searchEngine"] = _searchEngine.ToString();
             }
         }
         public static string SearchEngineURL { get; private set; }
 
         public static void LoadUserSettings()
         {
-            var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
 
-            CreateUserSettings(localSettings);
+            CreateUserSettings(storedSettings);
 
-            HomeURL = localSettings.Values["homePage"].ToString();
+            HomeURL = storedSettings.Values["homePage"] as string;
 
             try
             {
-                SearchEngine = (SearchEngine)localSettings.Values["searchEngine"];
+                SearchEngine = (SearchEngine)Enum.Parse(typeof(SearchEngine), storedSettings.Values["searchEngine"] as string);
             }
             catch (Exception e)
             {
+                throw e;
                 SearchEngine = SearchEngine.Bing;
             }
         }
 
-        private static void CreateUserSettings(Windows.Storage.ApplicationDataContainer localSettings)
+        private static void CreateUserSettings(Windows.Storage.ApplicationDataContainer storedSettings)
         {
-            if (!localSettings.Values.ContainsKey("homePage") || string.IsNullOrWhiteSpace(localSettings.Values["homePage"].ToString()))
-                localSettings.Values["homePage"] = "https://www.bing.com/";
+            if (!storedSettings.Values.ContainsKey("homePage") || string.IsNullOrWhiteSpace(storedSettings.Values["homePage"].ToString()))
+                storedSettings.Values["homePage"] = "https://www.bing.com/";
 
-            if (!localSettings.Values.ContainsKey("searchEngine"))
-                localSettings.Values["searchEngine"] = (int)SearchEngine.Bing;
+            if (!storedSettings.Values.ContainsKey("searchEngine"))
+                storedSettings.Values["searchEngine"] = SearchEngine.Bing.ToString();
         }
     }
 

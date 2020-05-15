@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="GameBarBrowser.Tab"
+    x:Class="GameBarBrowser.TabBar"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GameBarBrowser"
@@ -9,18 +9,18 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Button x:Name="tabButton"
-            HorizontalAlignment="Stretch" 
             Height="36"
             MinWidth="120"
             MaxWidth="260"
             Width="260"
+            Margin="0,0,0.5,0"
             Click="tabButton_Click">
         <Grid Width="{Binding Width, ElementName=tabButton}"
               Height="{Binding Height, ElementName=tabButton}"
               Margin="-16,-12,-16,-12">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -31,7 +31,7 @@
             <StackPanel x:Name="activeIndicator"
                         Grid.Row="0"
                         Grid.ColumnSpan="2"
-                        Background="ForestGreen"
+                        Background="{ThemeResource SystemAccentColor}"
                         Visibility="Collapsed"/>
 
             <StackPanel Orientation="Horizontal"
@@ -55,7 +55,7 @@
                     Height="20"
                     BorderThickness="6" 
                     HorizontalAlignment="Right"
-                    Margin="0,0,8,0"
+                    Margin="8,0,8,0"
                     Padding="0"
                     Click="closeTabButton_Click">
                 <SymbolIcon Symbol="Cancel"

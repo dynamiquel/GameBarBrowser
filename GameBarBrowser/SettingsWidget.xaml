@@ -8,7 +8,6 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontWeight="SemiBold">
 
-    
     <StackPanel Orientation="Vertical" 
                 HorizontalAlignment="Left" 
                 VerticalAlignment="Top" 
@@ -27,16 +26,20 @@
                        Margin="16,0,0,0" 
                        FontSize="24"/>
         </StackPanel>
+
+        <TextBlock Text="BASIC" Margin="0,16,0,8" FontSize="16" Foreground="Gray"/>
         
         <TextBlock Text="Homepage" Margin="0,0,0,8"/>
         <TextBox Name="homePageURLTextBox" 
-                 Text="https://www.bing.com" 
+                 Text="https://www.bing.com"
+                 IsSpellCheckEnabled="False"
                  TextChanged="homePageURLTextBox_TextChanged"/>
 
         <TextBlock Text="Search Engine" Margin="0,16,0,8"/>
         <ComboBox Name="searchEngineComboBox" 
                   SelectedIndex="0" 
                   SelectionChanged="searchEngineComboBox_SelectionChanged" 
+                  Loaded="searchEngineComboBox_Loaded"
                   HorizontalAlignment="Stretch">
             <ComboBox.Items>
                 <ComboBoxItem Content="Bing"/>
@@ -44,5 +47,13 @@
                 <ComboBoxItem Content="DuckDuckGo"/>
             </ComboBox.Items>
         </ComboBox>
+
+        <TextBlock Text="ABOUT" Margin="0,28,0,8" FontSize="16" Foreground="Gray"/>
+        <TextBlock TextWrapping="Wrap">
+            Browser for Xbox Game Bar<LineBreak></LineBreak><LineBreak></LineBreak>
+            Developed by Liam Hall<LineBreak></LineBreak>
+            Licenced under <Hyperlink NavigateUri="https://unlicense.org">The Unlicense</Hyperlink><LineBreak></LineBreak><LineBreak></LineBreak>
+            <Hyperlink NavigateUri="https://github.com/dynamiquel/Game-Bar-Browser">Report issues or contribute to development.</Hyperlink>
+        </TextBlock>
     </StackPanel>
 </Page>

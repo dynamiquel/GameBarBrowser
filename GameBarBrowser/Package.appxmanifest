@@ -63,7 +63,6 @@
               <GameBarWidget Type="Standard">
                 <HomeMenuVisible>true</HomeMenuVisible>
                 <PinningSupported>true</PinningSupported>
-                <SettingsSupported AppExtensionId="SettingsWidget">true</SettingsSupported>
                 <ActivateAfterInstalled>true</ActivateAfterInstalled>
                 <Window>
                   <Size>

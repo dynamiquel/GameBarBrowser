@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameBarBrowser
+﻿namespace GameBarBrowser
 {
     public class TabGroup
     {
-        public Tab Tab { get; set; }
-        public WebViewPage WebViewPage {get; set;}
+        public TabBar Tab { get; set; }
+        public TabView WebViewPage {get; set;}
+        public bool InProgress { get; set; } = false;
     }
 }

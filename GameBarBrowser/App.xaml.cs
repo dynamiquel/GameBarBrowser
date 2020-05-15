@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Gaming.XboxGameBar;
 
+/// <summary>
+/// Known issues during development:
+/// - Search Engine ComboBox within Settings won't display the user's selected search engine after restart. Attempted solutions. No success.
+/// - Tabs don't shrink when reaching max width (I'm pretty new to UWP). Attempted solutions. No success.
+/// - Widget likes to exit Game Bar sometimes when a new instance is loaded. Not sure if this is a issue on my end or not.
+/// </summary>
 namespace GameBarBrowser
 {
     public static class WidgetArgs
@@ -28,6 +24,7 @@ namespace GameBarBrowser
     sealed partial class App : Application
     {
         private XboxGameBarWidget browserWidget = null;
+        // Not currently used.
         private XboxGameBarWidget settingsWidget = null;
 
         /// <summary>

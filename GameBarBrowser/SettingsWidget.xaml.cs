@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+﻿using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -25,6 +14,7 @@ namespace GameBarBrowser
         public SettingsWidget()
         {
             this.InitializeComponent();
+            homePageURLTextBox.Text = UserSettings.HomeURL;
         }
 
         private void searchEngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -39,7 +29,13 @@ namespace GameBarBrowser
 
         private void quitButton_Click(object sender, RoutedEventArgs e)
         {
-            var frame = Window.Current.Content as Frame;
+            var parentFrame = this.Frame;
+            Frame.Visibility = Visibility.Collapsed;
+        }
+
+        private void searchEngineComboBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            searchEngineComboBox.SelectedIndex = (int)UserSettings.SearchEngine;
         }
     }
 }

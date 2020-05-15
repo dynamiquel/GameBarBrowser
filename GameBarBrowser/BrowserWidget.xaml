@@ -180,11 +180,19 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Name="tabSection"
-                    Orientation="Horizontal">
+        <!--#region Where the tabs are located. -->
+        <Grid Name="tabSection"
+            MaxWidth="1920"
+            HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
 
             <StackPanel Name="tabs"
-                    Orientation="Horizontal">
+                        Orientation="Horizontal"
+                        Grid.Column="0"
+                        HorizontalAlignment="Left">
             </StackPanel>
 
             <Button x:Name="newTabButton"
@@ -193,12 +201,15 @@
                     Padding="0"
                     Margin="4,0,0,0"
                     BorderThickness="6"
+                    Grid.Column="1"
                     Click="newTabButton_Click">
                 <SymbolIcon Symbol="Add" Height="20" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Button>
-            
-        </StackPanel>
 
+        </Grid>
+        <!--#endregion-->
+
+        <!-- Misleading name. -->
         <Grid Name="tabView"
               Grid.Row="1">
             <Grid.RowDefinitions>
@@ -206,6 +217,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <!--#region Command and search bar. -->
             <Grid VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -244,10 +256,13 @@
                 <TextBox Style="{StaticResource TextBoxStyle1}" 
                          Grid.Column="1" 
                          x:Name="AB_searchBox"
-                         Text="www.google.co.uk"
+                         Text="www.bing.com"
                          VerticalAlignment="Stretch"
+                         FontSize="16"
                          PlaceholderText="Search with a search engine or enter address"
-                         KeyDown="AB_searchBox_KeyDown"/>
+                         IsSpellCheckEnabled="False"
+                         KeyDown="AB_searchBox_KeyDown"
+                         GotFocus="AB_searchBox_GotFocus"/>
 
                 <CommandBar Grid.Column="2" 
                             HorizontalAlignment="Right"
@@ -264,9 +279,11 @@
                                   Click="AB_settingsButton_Click"/>
                 </CommandBar>
             </Grid>
+            <!--#endregion-->
 
+            <!-- Where the pages are rendered. -->
             <Grid Name="content"
-                  Grid.Row="1neannnbbbbhnnn">
+                  Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
