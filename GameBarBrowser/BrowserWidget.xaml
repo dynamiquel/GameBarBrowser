@@ -5,6 +5,7 @@
     xmlns:local="using:GameBarBrowser"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
     <Page.Resources>
@@ -179,23 +180,36 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Name="tab">
+        <!--#region Where the tabs are located. -->
+        <Grid Name="tabSection"
+            MaxWidth="1920"
+            HorizontalAlignment="Left">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
-            <Image x:Name="favicon"
-                   Grid.Column="0"
-                   Height="16"
-                   Width="16"
-                   Margin="8"/>
-            <TextBlock x:Name="pageName"
-                       Grid.Column="1"
-                       Text="Google"
-                       VerticalAlignment="Center"/>
-        </Grid>
+            <StackPanel Name="tabs"
+                        Orientation="Horizontal"
+                        Grid.Column="0"
+                        HorizontalAlignment="Left">
+            </StackPanel>
 
+            <Button x:Name="newTabButton"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    Margin="4,0,0,0"
+                    BorderThickness="6"
+                    Grid.Column="1"
+                    Click="newTabButton_Click">
+                <SymbolIcon Symbol="Add" Height="20" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Button>
+
+        </Grid>
+        <!--#endregion-->
+
+        <!-- Misleading name. -->
         <Grid Name="tabView"
               Grid.Row="1">
             <Grid.RowDefinitions>
@@ -203,6 +217,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
+            <!--#region Command and search bar. -->
             <Grid VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -211,8 +226,8 @@
                 </Grid.ColumnDefinitions>
 
                 <CommandBar Grid.Column="0" 
-                        HorizontalAlignment="Left"
-                        OverflowButtonVisibility="Collapsed">
+                            HorizontalAlignment="Left"
+                            OverflowButtonVisibility="Collapsed">
                     <AppBarButton x:Name="AB_backButton" 
                                   Icon="Back" 
                                   Label="Back"
@@ -241,10 +256,13 @@
                 <TextBox Style="{StaticResource TextBoxStyle1}" 
                          Grid.Column="1" 
                          x:Name="AB_searchBox"
-                         Text="www.google.co.uk"
+                         Text="www.bing.com"
                          VerticalAlignment="Stretch"
-                         PlaceholderText="Search with Bing or enter address"
-                         KeyDown="AB_searchBox_KeyDown"/>
+                         FontSize="16"
+                         PlaceholderText="Search with a search engine or enter address"
+                         IsSpellCheckEnabled="False"
+                         KeyDown="AB_searchBox_KeyDown"
+                         GotFocus="AB_searchBox_GotFocus"/>
 
                 <CommandBar Grid.Column="2" 
                             HorizontalAlignment="Right"
@@ -254,7 +272,21 @@
                                   Label="Search"
                                   ToolTipService.ToolTip="Search"
                                   Click="AB_searchButton_Click"/>
+                    <AppBarButton x:Name="AB_settingsButton"
+                                  Icon="Setting"
+                                  Label="Settings"
+                                  ToolTipService.ToolTip="Change browser settings"
+                                  Click="AB_settingsButton_Click"/>
                 </CommandBar>
+            </Grid>
+            <!--#endregion-->
+
+            <!-- Where the pages are rendered. -->
+            <Grid Name="content"
+                  Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
             </Grid>
         </Grid>
     </Grid>

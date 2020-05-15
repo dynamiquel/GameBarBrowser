@@ -51,29 +51,55 @@
           <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
       </uap:VisualElements>
       <Extensions>
+        
+        <!-- Main browser window -->
         <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="microsoft.gameBarUIExtension"
-                             Id="9NK1CNB0NCCX"
+                             Id="BrowserWidget"
                              DisplayName="Browser"
                              Description="Browse the web."
-                             PublicFolder="GameBar\Ext1">
+                             PublicFolder="PublicAssets">
             <uap3:Properties>
               <GameBarWidget Type="Standard">
                 <HomeMenuVisible>true</HomeMenuVisible>
                 <PinningSupported>true</PinningSupported>
-                <SettingsSupported AppExtensionId="YourSettingsExtensionId" />
+                <ActivateAfterInstalled>true</ActivateAfterInstalled>
                 <Window>
                   <Size>
                     <Height>720</Height>
                     <Width>1280</Width>
                     <MinHeight>150</MinHeight>
                     <MinWidth>600</MinWidth>
-                    <MaxHeight>2160</MaxHeight>
-                    <MaxWidth>3840</MaxWidth>
+                    <MaxHeight>Infinite</MaxHeight>
+                    <MaxWidth>Infinite</MaxWidth>
                   </Size>
                   <ResizeSupported>
                     <Horizontal>true</Horizontal>
                     <Vertical>true</Vertical>
+                  </ResizeSupported>
+                </Window>
+              </GameBarWidget>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
+
+        <!-- Settings window -->
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="microsoft.gameBarUIExtension"
+                             Id="SettingsWidget"
+                             DisplayName="Settings"
+                             Description="Settings for Browser for Xbox Game Bar"
+                             PublicFolder="PublicAssets">
+            <uap3:Properties>
+              <GameBarWidget Type="Settings">
+                <Window>
+                  <Size>
+                    <Height>300</Height>
+                    <Width>300</Width>
+                  </Size>
+                  <ResizeSupported>
+                    <Horizontal>false</Horizontal>
+                    <Vertical>false</Vertical>
                   </ResizeSupported>
                 </Window>
               </GameBarWidget>
