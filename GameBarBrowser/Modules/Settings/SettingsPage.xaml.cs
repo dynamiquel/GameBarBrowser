@@ -4,17 +4,18 @@ using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace GameBarBrowser
+namespace GameBarBrowser.Settings
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class SettingsWidget : Page
+    public sealed partial class SettingsPage : Page
     {
-        public SettingsWidget()
+        public SettingsPage()
         {
             this.InitializeComponent();
             homePageURLTextBox.Text = UserSettings.HomeURL;
+            switchToNewTabsCheckBox.IsChecked = UserSettings.SwitchToNewTab;
         }
 
         private void searchEngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -36,6 +37,13 @@ namespace GameBarBrowser
         private void searchEngineComboBox_Loaded(object sender, RoutedEventArgs e)
         {
             searchEngineComboBox.SelectedIndex = (int)UserSettings.SearchEngine;
+        }
+
+        private void switchToNewTabsCheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+
+            UserSettings.SwitchToNewTab = (bool) checkBox.IsChecked;
         }
     }
 }

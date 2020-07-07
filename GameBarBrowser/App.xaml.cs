@@ -5,6 +5,9 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Gaming.XboxGameBar;
+using System.Collections.Generic;
+using GameBarBrowser.Core;
+using System.Diagnostics;
 
 /// <summary>
 /// Known issues during development:
@@ -21,8 +24,11 @@ namespace GameBarBrowser
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : Application
+    public sealed partial class App : Application
     {
+        private static List<BrowserWidget> BrowserWindows = new List<BrowserWidget>();
+
+
         private XboxGameBarWidget browserWidget = null;
         // Not currently used.
         private XboxGameBarWidget settingsWidget = null;
@@ -36,7 +42,21 @@ namespace GameBarBrowser
             this.InitializeComponent();
             this.Suspending += OnSuspending;
 
-            UserSettings.LoadUserSettings();
+            Settings.UserSettings.LoadUserSettings();
+        }
+
+        public static void Query(string query, uint browserWindowIndex = 0)
+        {
+            Debug.WriteLine(BrowserWindows.Count);
+            if (BrowserWindows.Count > 0 && BrowserWindows.Count > browserWindowIndex)
+                BrowserWindows[(int)browserWindowIndex].Query(query);
+        }
+
+        public static void QueryInNewTab(string query, uint browserWindowIndex = 0)
+        {
+            Debug.WriteLine(BrowserWindows.Count);
+            if (BrowserWindows.Count > 0 && BrowserWindows.Count > browserWindowIndex)
+                BrowserWindows[(int)browserWindowIndex].QueryInNewTab(query);
         }
 
         protected override void OnActivated(IActivatedEventArgs args)
@@ -90,7 +110,10 @@ namespace GameBarBrowser
                             widgetArgs,
                             Window.Current.CoreWindow,
                             rootFrame);
-                        rootFrame.Navigate(typeof(BrowserWidget), browserWidget);
+
+                        rootFrame.Navigated += RootFrame_Navigated;
+
+                        rootFrame.Navigate(typeof(Core.BrowserWidget), browserWidget);                       
 
                         Window.Current.Closed += BrowserWidgetWindow_Closed;
                     }
@@ -101,7 +124,7 @@ namespace GameBarBrowser
                             widgetArgs,
                             Window.Current.CoreWindow,
                             rootFrame);
-                        rootFrame.Navigate(typeof(SettingsWidget));
+                        rootFrame.Navigate(typeof(Settings.SettingsPage));
 
                         Window.Current.Closed += SettingsWidgetWindow_Closed;
                     }
@@ -113,6 +136,16 @@ namespace GameBarBrowser
                     // You can perform whatever behavior you need based on the URI payload.
                 }
             }
+        }
+
+        private void RootFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            var browserWindow = e.Content as BrowserWidget;
+
+            if (!BrowserWindows.Contains(browserWindow))
+                BrowserWindows.Add(e.Content as BrowserWidget);
+
+            (sender as Frame).Navigated -= RootFrame_Navigated;
         }
 
         private void BrowserWidgetWindow_Closed(object sender, Windows.UI.Core.CoreWindowEventArgs e)
@@ -161,7 +194,7 @@ namespace GameBarBrowser
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(Pages.MainPage), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();

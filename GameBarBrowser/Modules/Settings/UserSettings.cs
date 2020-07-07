@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Diagnostics;
+using Windows.Devices.Geolocation;
+using Windows.Storage;
 
-namespace GameBarBrowser
+namespace GameBarBrowser.Settings
 {
     public static class UserSettings
     {
@@ -51,6 +52,19 @@ namespace GameBarBrowser
         }
         public static string SearchEngineURL { get; private set; }
 
+        private static bool _switchToNewTab;
+        public static bool SwitchToNewTab
+        {
+            get => _switchToNewTab;
+            set
+            {
+                _switchToNewTab = value;
+
+                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                storedSettings.Values["switchToNewTab"] = value;
+            }
+        }
+
         public static void LoadUserSettings()
         {
             var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
@@ -65,8 +79,16 @@ namespace GameBarBrowser
             }
             catch (Exception e)
             {
-                throw e;
                 SearchEngine = SearchEngine.Bing;
+            }
+
+            try
+            {
+                SwitchToNewTab = bool.Parse(storedSettings.Values["switchToNewTab"] as string);
+            }
+            catch (Exception e)
+            {
+                SwitchToNewTab = true;
             }
         }
 
@@ -77,6 +99,9 @@ namespace GameBarBrowser
 
             if (!storedSettings.Values.ContainsKey("searchEngine"))
                 storedSettings.Values["searchEngine"] = SearchEngine.Bing.ToString();
+
+            if (!storedSettings.Values.ContainsKey("switchToNewTab"))
+                storedSettings.Values["switchToNewTab"] = true;
         }
     }
 

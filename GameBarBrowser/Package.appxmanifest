@@ -69,7 +69,7 @@
                     <Height>720</Height>
                     <Width>1280</Width>
                     <MinHeight>150</MinHeight>
-                    <MinWidth>600</MinWidth>
+                    <MinWidth>200</MinWidth>
                     <MaxHeight>Infinite</MaxHeight>
                     <MaxWidth>Infinite</MaxWidth>
                   </Size>

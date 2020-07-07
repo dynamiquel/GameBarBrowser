@@ -127,24 +127,40 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BrowserWidget.xaml.cs">
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="Modules\Core\BaseView.cs" />
+    <Compile Include="Modules\Core\NativeView.cs" />
+    <Compile Include="Modules\Core\PageType.cs" />
+    <Compile Include="Modules\Core\TabHandler.cs" />
+    <Compile Include="Modules\Core\WebView.cs" />
+    <Compile Include="Modules\Library\Artifact.cs" />
+    <Compile Include="Modules\Library\Bookmark.cs" />
+    <Compile Include="Modules\Library\Bookmarks.cs" />
+    <Compile Include="Modules\Core\BrowserWidget.xaml.cs">
       <DependentUpon>BrowserWidget.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainPage.xaml.cs">
+    <Compile Include="Modules\Library\History.cs" />
+    <Compile Include="Modules\Library\LibraryHandler.cs" />
+    <Compile Include="Modules\Library\LibraryPage.xaml.cs">
+      <DependentUpon>LibraryPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsWidget.xaml.cs">
-      <DependentUpon>SettingsWidget.xaml</DependentUpon>
+    <Compile Include="Modules\Settings\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Tab.xaml.cs">
-      <DependentUpon>Tab.xaml</DependentUpon>
+    <Compile Include="Modules\Core\TabButton.xaml.cs">
+      <DependentUpon>TabButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TabGroup.cs" />
-    <Compile Include="UserSettings.cs" />
-    <Compile Include="WebViewPage.xaml.cs">
-      <DependentUpon>WebViewPage.xaml</DependentUpon>
+    <Compile Include="Modules\Core\TabGroup.cs" />
+    <Compile Include="Modules\Settings\UserSettings.cs" />
+    <Compile Include="Modules\Core\TabRenderer.xaml.cs">
+      <DependentUpon>TabRenderer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Library\WebPage.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -231,36 +247,43 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="BrowserWidget.xaml">
+    <Page Include="Modules\Core\BrowserWidget.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="SettingsWidget.xaml">
+    <Page Include="Modules\Library\LibraryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Tab.xaml">
+    <Page Include="Pages\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WebViewPage.xaml">
+    <Page Include="Modules\Settings\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Core\TabButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Core\TabRenderer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Gaming.XboxGameBar">
-      <Version>5.1.200402003</Version>
+      <Version>5.3.200605002</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.9</Version>
+      <Version>6.2.10</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.3.200213001</Version>
+      <Version>2.4.2</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>12.0.3</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

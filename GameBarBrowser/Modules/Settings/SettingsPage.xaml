@@ -1,5 +1,5 @@
 ﻿<Page
-    x:Class="GameBarBrowser.SettingsWidget"
+    x:Class="GameBarBrowser.Settings.SettingsPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GameBarBrowser"
@@ -24,7 +24,7 @@
             <TextBlock Text="Settings" 
                        VerticalAlignment="Center" 
                        Margin="16,0,0,0" 
-                       FontSize="24"/>
+                       FontSize="24" FontWeight="Bold"/>
         </StackPanel>
 
         <TextBlock Text="BASIC" Margin="0,16,0,8" FontSize="16" Foreground="Gray"/>
@@ -47,6 +47,16 @@
                 <ComboBoxItem Content="DuckDuckGo"/>
             </ComboBox.Items>
         </ComboBox>
+
+        <CheckBox Name="switchToNewTabsCheckBox"
+                  Margin="0,16,0,8"
+                  Click="switchToNewTabsCheckBox_Click"
+                  Content="Auto-switch to new tabs"
+                  FlowDirection="RightToLeft"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Right"
+                  ToolTipService.ToolTip="Enabled: When a new tab is created, the browser will automatically switch to it."/>
+        
 
         <TextBlock Text="ABOUT" Margin="0,28,0,8" FontSize="16" Foreground="Gray"/>
         <TextBlock TextWrapping="Wrap">
