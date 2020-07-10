@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameBarBrowser.Shortcuts;
+using System;
 using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -12,12 +13,13 @@ namespace GameBarBrowser.Core
         public override bool CanGoForward { get => NativeViewComponent.CanGoForward; protected set => throw new NotImplementedException(); }
         public override bool LoadingPage { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
         public override string DocumentTitle { get => "Native View"; protected set => throw new NotImplementedException(); }
-        public override string Uri { get; protected set; }
+        public override string Uri { get; protected set; } = string.Empty;
         public override Visibility Visibility { get => NativeViewComponent.Visibility; set => NativeViewComponent.Visibility = value; }
 
         public override event Action<BaseView, BaseViewNavigationEventArgs> NavigationStarting;
         public override event Action<BaseView, BaseViewNavigationEventArgs> NavigationCompleted;
 
+        public static readonly string UriPrefix = ":://";
         public Frame NativeViewComponent { get; private set; }
 
         private bool isExistingPage;
@@ -33,13 +35,18 @@ namespace GameBarBrowser.Core
 
         private void HandleNavigated(object sender, Windows.UI.Xaml.Navigation.NavigationEventArgs e)
         {
-            Uri = "::SomeNativeThing_Loaded";
+            Uri = (sender as Frame).Content.GetType().FullName;
+
+            string shortcutId = ShortcutHandler.NativeShortcuts.GetKey($"{UriPrefix}{Uri}");
+
+            if (!string.IsNullOrWhiteSpace(shortcutId))
+                Uri = $"{ShortcutHandler.NativeShortcuts.Prefix}{shortcutId}";
+
             NavigationCompleted?.Invoke(this, new BaseViewNavigationEventArgs { Uri = Uri });
         }
 
         private void HandleNavigating(object sender, Windows.UI.Xaml.Navigation.NavigatingCancelEventArgs e)
         {
-            Uri = "::SomeNativeThing_Loaded";
             NavigationStarting?.Invoke(this, new BaseViewNavigationEventArgs { Uri = Uri, IsNewPage = !isExistingPage });
             isExistingPage = false;
         }
@@ -63,10 +70,13 @@ namespace GameBarBrowser.Core
 
         public override void Navigate(string url)
         {
-            if (!url.StartsWith("::"))
-                return;
+            if (url.StartsWith(ShortcutHandler.NativeShortcuts.Prefix))
+                url = ShortcutHandler.NativeShortcuts.GetUri(url);
 
-            url = url.Remove(0, 2);
+            if (url.StartsWith(UriPrefix))
+                url = url.Remove(0, UriPrefix.Length);
+            else
+                return;
 
             Type pageType;
             try

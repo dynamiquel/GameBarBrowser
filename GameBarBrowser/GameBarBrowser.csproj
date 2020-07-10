@@ -144,6 +144,10 @@
     <Compile Include="Modules\Library\LibraryPage.xaml.cs">
       <DependentUpon>LibraryPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Shortcuts\BaseShortcuts.cs" />
+    <Compile Include="Modules\Shortcuts\NativeShortcuts.cs" />
+    <Compile Include="Modules\Shortcuts\NormalShortcuts.cs" />
+    <Compile Include="Modules\Shortcuts\ShortcutHandler.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>

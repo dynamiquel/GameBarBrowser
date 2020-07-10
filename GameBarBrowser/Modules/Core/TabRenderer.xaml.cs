@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameBarBrowser.Shortcuts;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Windows.UI.Xaml;
@@ -82,7 +83,10 @@ namespace GameBarBrowser.Core
             if (timeline.Count > timelineIndex + 1)
                 RemoveFutureTimeline();
 
-            if (query.StartsWith("::"))
+            if (query.StartsWith(ShortcutHandler.NormalShortcuts.Prefix))
+                query = ShortcutHandler.NormalShortcuts.GetUri(query);
+
+            if (query.StartsWith(NativeView.UriPrefix) || query.StartsWith(ShortcutHandler.NativeShortcuts.Prefix))
             {
                 DisplayView(PageType.Native);
                 NativeView.Navigate(query);
@@ -119,18 +123,26 @@ namespace GameBarBrowser.Core
                     timelineIndex--;
 
                     if (currentPageType == previousPageType)
+                    {
                         WebView.GoBack();
+                    }
                     else
+                    {
                         HandleNavigationCompleted(WebView, new BaseViewNavigationEventArgs { Uri = WebView.Uri });
+                    }
                 }
                 else if (previousPageType == PageType.Native)
                 {
                     timelineIndex--;
 
                     if (currentPageType == previousPageType)
+                    {
                         NativeView.GoBack();
+                    }
                     else
+                    {
                         HandleNavigationCompleted(NativeView, new BaseViewNavigationEventArgs { Uri = NativeView.Uri });
+                    }
                 }
             }
         }
@@ -149,18 +161,26 @@ namespace GameBarBrowser.Core
                     timelineIndex++;
 
                     if (currentPageType == forwardPageType)
+                    {
                         WebView.GoForward();
+                    }
                     else
+                    {
                         HandleNavigationCompleted(WebView, new BaseViewNavigationEventArgs { Uri = WebView.Uri });
+                    }
                 }
                 else if (forwardPageType == PageType.Native)
                 {
                     timelineIndex++;
 
                     if (currentPageType == forwardPageType)
+                    {
                         NativeView.GoForward();
+                    }
                     else
+                    {
                         HandleNavigationCompleted(NativeView, new BaseViewNavigationEventArgs { Uri = NativeView.Uri });
+                    }
                 }
             }
         }

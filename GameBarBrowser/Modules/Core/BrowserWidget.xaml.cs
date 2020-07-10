@@ -1,6 +1,4 @@
-﻿using GameBarBrowser.Library;
-using System;
-using System.Diagnostics;
+﻿using GameBarBrowser.Shortcuts;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -15,9 +13,6 @@ namespace GameBarBrowser.Core
     public sealed partial class BrowserWidget : Page
     {
         private TabHandler tabHandler;
-
-        Frame settingsFrame;
-        Frame libraryFrame;
         
         public BrowserWidget()
         {
@@ -86,33 +81,6 @@ namespace GameBarBrowser.Core
                 AB_refreshButton.Icon = symbol;
             }
         }
-
-        private void ShowSettings()
-        {
-            if (settingsFrame == null)
-                CreateSettings();
-
-            var index = pageViewer.Children.IndexOf(settingsFrame);
-            pageViewer.Children.Move((uint)index, (uint)(pageViewer.Children.Count - 1));
-            settingsFrame.Visibility = Visibility.Visible;
-            Window.Current.Activate();
-        }
-
-        private void CreateSettings()
-        {
-            settingsFrame = new Frame();
-            pageViewer.Children.Add(settingsFrame);
-            settingsFrame.Navigate(typeof(Settings.SettingsPage), null);
-        }
-
-        private void HideSettings()
-        {
-            if (settingsFrame == null)
-                return;
-
-            settingsFrame.Visibility = Visibility.Collapsed;
-        }
-
         #region Control Events
 
         private async void newTabButton_Click(object sender, RoutedEventArgs e)
@@ -122,8 +90,6 @@ namespace GameBarBrowser.Core
 
         private void AB_backButton_Click(object sender, RoutedEventArgs e)
         {
-            HideSettings();
-
             if (tabHandler.FocusedTab.TabView != null && tabHandler.FocusedTab.TabView.CanGoBack)
                 tabHandler.FocusedTab.TabView.GoBack();
             else
@@ -132,8 +98,6 @@ namespace GameBarBrowser.Core
 
         private void AB_forwardButton_Click(object sender, RoutedEventArgs e)
         {
-            HideSettings();
-
             if (tabHandler.FocusedTab.TabView != null && tabHandler.FocusedTab.TabView.CanGoForward)
                 tabHandler.FocusedTab.TabView.GoForward();
             else
@@ -142,37 +106,29 @@ namespace GameBarBrowser.Core
 
         private void AB_refreshButton_Click(object sender, RoutedEventArgs e)
         {
-            HideSettings();
-
             tabHandler.FocusedTab.TabView?.Refresh();
         }
 
         private void AB_homeButton_Click(object sender, RoutedEventArgs e)
         {
-            HideSettings();
-
             Query(Settings.UserSettings.HomeURL);
         }
 
         private void AB_searchBox_KeyDown(object sender, KeyRoutedEventArgs e)
         {
-            HideSettings();
-
             if (e.Key == Windows.System.VirtualKey.Enter)
                 Query(AB_searchBox.Text);
         }
 
         private void AB_searchButton_Click(object sender, RoutedEventArgs e)
         {
-            HideSettings();
-
             Query(AB_searchBox.Text);
         }
 
         // Workaround for the 'Game Bar options' button not working.
         private void AB_settingsButton_Click(object sender, RoutedEventArgs e)
         {
-            ShowSettings();
+            Query($"{ShortcutHandler.NativeShortcuts.Prefix}settings");
         }
 
         private void AB_searchBox_GotFocus(object sender, RoutedEventArgs e)
@@ -184,7 +140,7 @@ namespace GameBarBrowser.Core
 
         private void AB_libraryButton_Click(object sender, RoutedEventArgs e)
         {
-            Query($"::{typeof(LibraryPage).FullName}");
+            Query($"{ShortcutHandler.NativeShortcuts.Prefix}library");
         }
     }
 }
