@@ -39,6 +39,47 @@ namespace GameBarBrowser.Core
             tabHandler.QueryInNewTab(query);
         }
 
+        public async void QueryInDefaultBrowser(string uriString)
+        {
+            if (uriString.StartsWith(NativeView.UriPrefix))
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open page",
+                    Content = "This page cannot be open in your default browser.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+                return;
+            }
+
+            // The URI to launch
+            var uri = new Uri(tabHandler.FocusedTab.TabRenderer.Uri);
+
+            if (!uri.IsAbsoluteUri)
+                return;
+
+            // Launch the URI
+            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+
+            if (success)
+            {
+                // URI launched
+            }
+            else
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open browser",
+                    Content = "Your default browser could not be opened.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+            }
+        }
+
         private void HandleNavigationStart(TabGroup tab, bool isFocusedTab)
         {
             // If the tab group is the focued tab group, update the command bar.
@@ -83,48 +124,7 @@ namespace GameBarBrowser.Core
                 var symbol = new SymbolIcon { Symbol = Symbol.Refresh };
                 AB_refreshButton.Icon = symbol;
             }
-        }
-
-        private async void QueryInDefaultBrowser(string uriString)
-        {        
-            if (uriString.StartsWith(NativeView.UriPrefix))
-            {
-                var dialog = new ContentDialog
-                {
-                    Title = "Cannot open page",
-                    Content = "This page cannot be open in your default browser.",
-                    CloseButtonText = "Ok"
-                };
-
-                await dialog.ShowAsync();
-                return;
-            }
-
-            // The URI to launch
-            var uri = new Uri(tabHandler.FocusedTab.TabRenderer.Uri);
-
-            if (!uri.IsAbsoluteUri)
-                return;
-
-            // Launch the URI
-            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
-
-            if (success)
-            {
-                // URI launched
-            }
-            else
-            {
-                var dialog = new ContentDialog
-                {
-                    Title = "Cannot open browser",
-                    Content = "Your default browser could not be opened.",
-                    CloseButtonText = "Ok"
-                };
-
-                await dialog.ShowAsync();
-            }
-        }
+        }      
         #region Control Events
 
         private async void newTabButton_Click(object sender, RoutedEventArgs e)

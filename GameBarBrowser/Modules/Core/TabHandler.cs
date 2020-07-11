@@ -121,6 +121,9 @@ namespace GameBarBrowser.Core
             FocusedTab.TabButton.Active = true;
             FocusedTab.TabRenderer.Frame.Visibility = Visibility.Visible;
             FocusedTab.TabRenderer.Focus(FocusState.Keyboard);
+
+            // Simple hack to update the top bar buttons when switching between existing tabs.
+            OnNavigationComplete?.Invoke(tabToSwitchTo, true);
         }
 
         // Gets the tab group with the tab button.
