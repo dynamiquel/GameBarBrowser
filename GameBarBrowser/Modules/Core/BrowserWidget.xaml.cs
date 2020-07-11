@@ -1,4 +1,6 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -82,6 +84,47 @@ namespace GameBarBrowser.Core
                 AB_refreshButton.Icon = symbol;
             }
         }
+
+        private async void QueryInDefaultBrowser(string uriString)
+        {        
+            if (uriString.StartsWith(NativeView.UriPrefix))
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open page",
+                    Content = "This page cannot be open in your default browser.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+                return;
+            }
+
+            // The URI to launch
+            var uri = new Uri(tabHandler.FocusedTab.TabRenderer.Uri);
+
+            if (!uri.IsAbsoluteUri)
+                return;
+
+            // Launch the URI
+            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+
+            if (success)
+            {
+                // URI launched
+            }
+            else
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open browser",
+                    Content = "Your default browser could not be opened.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+            }
+        }
         #region Control Events
 
         private async void newTabButton_Click(object sender, RoutedEventArgs e)
@@ -142,6 +185,11 @@ namespace GameBarBrowser.Core
         private void AB_libraryButton_Click(object sender, RoutedEventArgs e)
         {
             Query($"{NativeView.UriPrefix}library");
+        }
+
+        private void AB_defaultBrowserButton_Click(object sender, RoutedEventArgs e)
+        {
+            QueryInDefaultBrowser(tabHandler.FocusedTab.TabRenderer.Uri);
         }
     }
 }

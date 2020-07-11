@@ -281,6 +281,11 @@
                                   Label="Settings"
                                   ToolTipService.ToolTip="Change browser settings"
                                   Click="AB_settingsButton_Click"/>
+                    <AppBarButton x:Name="AB_defaultBrowserButton"
+                                  Icon="World"
+                                  Label="Default Browser"
+                                  ToolTipService.ToolTip="Open in your default browser"
+                                  Click="AB_defaultBrowserButton_Click"/>
                 </CommandBar>
             </Grid>
             <!--#endregion-->
