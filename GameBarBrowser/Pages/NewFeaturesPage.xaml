@@ -1,0 +1,55 @@
+﻿<Page
+    x:Class="GameBarBrowser.Pages.NewFeaturesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GameBarBrowser"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontWeight="SemiBold">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <StackPanel Orientation="Vertical" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Top" 
+                Width="auto"
+                MaxWidth="700"
+                Padding="16">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                <TextBlock Text="New features" 
+                       VerticalAlignment="Center" 
+                       Margin="0,0,0,0" 
+                       FontSize="24" FontWeight="Bold"/>
+            </StackPanel>
+
+            <TextBlock Text="v2.0" Margin="0,16,0,8" FontSize="16" Foreground="Gray"/>
+
+            <TextBlock Text="URL Shortcuts" Margin="0,0,0,8"/>
+            <TextBlock Text="Several URL shortcuts have been added. Try entering '@yt' to quickly get to YouTube.&#x0a;&#x0a;Other shorcuts include:&#x0a;- @google: google.com&#x0a;- @bing: bing.com&#x0a;- @ttv: twitch.tv&#x0a;- @steam: steampowered.com&#x0a;- @xbox: xbox.com&#x0a;- @ddg: duckduckgo.com" FontWeight="Normal" TextWrapping="Wrap"/>
+
+            <TextBlock Text="Open in default browser" Margin="0,16,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Text="You can now open the current web page in your default browser by pressing the Earth icon in the top-right corner."/>
+
+            <TextBlock Text="Favourites" Margin="0,16,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Text="Favourites? Bookmarks? Whatever you wish to call them, they now exist. Simply go to your Library to see them."/>
+
+            <TextBlock Text="History" Margin="0,16,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Text="You can access your history by going to your Library."/>
+
+            <TextBlock Text="Keyboard shortcuts" Margin="0,16,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Text="Keyboard shortcuts have been added. These include:&#x0a;- Ctrl+L = Library&#x0a;- Ctrl+D = Open in default browser&#x0a;- Ctrl+T = New tab&#x0a;- Ctrl+R / F5 = Refresh&#x0a;- Ctrl+Left Arrow = Go Back&#x0a;- Ctrl+Right Arrow = Go Forward&#x0a;- Ctrl+Shift+H / Ctrl+Home = Go Home&#x0a;- Ctrl+Shift+S = Settings"/>
+
+            <TextBlock Text="Use browser without Game Bar" Margin="0,16,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Text="You can now use the browser like a normal app, if you want that for some reason..."/>
+
+            <TextBlock Text="Settings as a tab" Margin="0,16,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Text="You can now access the Settings page through a URL and is contained within a tab."/>
+
+            <TextBlock Text="Access websites without http prefix" Margin="0,16,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Text="Any URL that isn't defined with a protocol and looks like a URL, will now be treated as HTTPS."/>
+
+            <TextBlock Text="Full-screen mode" Margin="0,16,0,8"/>
+            <TextBlock TextWrapping="Wrap" FontWeight="Normal" Text="There is now a full-screen mode. This combined with a smaller minimum size will make the browser more ideal as an overlay (picture-in-picture)."/>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

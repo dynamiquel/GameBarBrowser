@@ -1,4 +1,5 @@
 ﻿using GameBarBrowser.Library;
+using GameBarBrowser.Pages;
 using GameBarBrowser.Settings;
 using System;
 using System.Collections.Generic;
@@ -58,6 +59,7 @@ namespace GameBarBrowser.Core
             // Native pages must be added here to be accessed within the browser.
             Add("Settings", "settings", typeof(SettingsPage), "\xE713");
             Add("Library", "library", typeof(LibraryPage), "\xE8F1");
+            Add("New Features", "newfeatures", typeof(NewFeaturesPage), "\xE8F3");
         }
     }
 }

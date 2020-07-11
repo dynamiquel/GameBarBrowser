@@ -18,7 +18,7 @@ namespace GameBarBrowser.Library
             matchedElements.AddRange(bookmarks.Where(b => b.Name.Contains(query)));
 
             var remainingBookmarks = bookmarks.Except(matchedElements);
-            matchedElements.AddRange(remainingBookmarks.Where(b => b.URL.Contains(query)));
+            matchedElements.AddRange(remainingBookmarks.Where(b => b.URI.Contains(query)));
 
             return Task.FromResult(matchedElements);
         }
@@ -42,7 +42,7 @@ namespace GameBarBrowser.Library
                 bookmarks = new List<Bookmark>();
 
             foreach (var bookmark in bookmarksToAdd)
-                if (!bookmarks.Any(bm => bm.Name == bookmark.Name && bm.URL == bookmark.URL))
+                if (!bookmarks.Any(bm => bm.Name == bookmark.Name && bm.URI == bookmark.URI))
                     bookmarks.Add(bookmark);
         }
 

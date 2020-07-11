@@ -13,7 +13,7 @@ namespace GameBarBrowser.Core
     /// </summary>
     public sealed partial class BrowserWidget : Page
     {
-        private TabHandler tabHandler;
+        private readonly TabHandler tabHandler;
         
         public BrowserWidget()
         {
@@ -37,47 +37,6 @@ namespace GameBarBrowser.Core
         public void QueryInNewTab(string query)
         {
             tabHandler.QueryInNewTab(query);
-        }
-
-        public async void QueryInDefaultBrowser(string uriString)
-        {
-            if (uriString.StartsWith(NativeView.UriPrefix))
-            {
-                var dialog = new ContentDialog
-                {
-                    Title = "Cannot open page",
-                    Content = "This page cannot be open in your default browser.",
-                    CloseButtonText = "Ok"
-                };
-
-                await dialog.ShowAsync();
-                return;
-            }
-
-            // The URI to launch
-            var uri = new Uri(tabHandler.FocusedTab.TabRenderer.Uri);
-
-            if (!uri.IsAbsoluteUri)
-                return;
-
-            // Launch the URI
-            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
-
-            if (success)
-            {
-                // URI launched
-            }
-            else
-            {
-                var dialog = new ContentDialog
-                {
-                    Title = "Cannot open browser",
-                    Content = "Your default browser could not be opened.",
-                    CloseButtonText = "Ok"
-                };
-
-                await dialog.ShowAsync();
-            }
         }
 
         private void HandleNavigationStart(TabGroup tab, bool isFocusedTab)
@@ -189,7 +148,7 @@ namespace GameBarBrowser.Core
 
         private void AB_defaultBrowserButton_Click(object sender, RoutedEventArgs e)
         {
-            QueryInDefaultBrowser(tabHandler.FocusedTab.TabRenderer.Uri);
+            App.QueryInDefaultBrowser(tabHandler.FocusedTab.TabRenderer.Uri);
         }
     }
 }

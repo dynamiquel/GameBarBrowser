@@ -10,7 +10,7 @@ namespace GameBarBrowser.Library
         public Bookmark(string name, string url, DateTime firstVisited)
         {
             Name = name;
-            URL = url;
+            URI = url;
             FirstVisited = firstVisited;
             LastVisited = firstVisited;
         }

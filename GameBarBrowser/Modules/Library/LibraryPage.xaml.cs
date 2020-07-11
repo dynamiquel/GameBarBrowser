@@ -78,7 +78,14 @@ namespace GameBarBrowser.Library
         {
             var bookmark = GetSelectedBookmark();
 
-            App.QueryInNewTab(bookmark.URL);
+            App.QueryInNewTab(bookmark.URI);
+        }
+
+        private void MF_defaultBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            var bookmark = GetSelectedBookmark();
+
+            App.QueryInDefaultBrowser(bookmark.URI);
         }
 
         private void MF_edit_Click(object sender, RoutedEventArgs e)
@@ -131,7 +138,7 @@ namespace GameBarBrowser.Library
         {
             var bookmark = e.ClickedItem as Bookmark;
 
-            App.QueryInNewTab(bookmark.URL);
+            App.QueryInNewTab(bookmark.URI);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace GameBarBrowser.Library
     public class WebPage
     {
         public string Name { get; set; }
-        public string URL { get; set; }
+        public string URI { get; set; }
         public DateTime FirstVisited { get; set; }
 
         BitmapImage _favicon;
@@ -16,7 +16,7 @@ namespace GameBarBrowser.Library
             get
             { 
                 if (_favicon == null)
-                    _favicon = new BitmapImage(new Uri($"https://www.google.com/s2/favicons?sz=32&domain={URL}"));
+                    _favicon = new BitmapImage(new Uri($"https://www.google.com/s2/favicons?sz=32&domain={URI}"));
 
                 return _favicon;
             }

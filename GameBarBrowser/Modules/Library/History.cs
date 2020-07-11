@@ -16,7 +16,7 @@ namespace GameBarBrowser.Library
             matchedElements.AddRange(artifacts.Where(b => b.Name.Contains(query)));
 
             var remainingArtifacts = artifacts.Except(matchedElements);
-            matchedElements.AddRange(remainingArtifacts.Where(b => b.URL.Contains(query)));
+            matchedElements.AddRange(remainingArtifacts.Where(b => b.URI.Contains(query)));
 
             return Task.FromResult(matchedElements);
         }

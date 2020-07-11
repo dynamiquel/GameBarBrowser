@@ -1,5 +1,4 @@
-﻿using GameBarBrowser.Core;
-using GameBarBrowser.Settings;
+﻿using GameBarBrowser.Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq;

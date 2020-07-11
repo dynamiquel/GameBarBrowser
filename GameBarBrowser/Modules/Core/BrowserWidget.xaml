@@ -202,6 +202,9 @@
                     BorderThickness="6"
                     Grid.Column="1"
                     Click="newTabButton_Click">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="T"/>
+                </Button.KeyboardAccelerators>
                 <SymbolIcon Symbol="Add" Height="20" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             </Button>
 
@@ -231,22 +234,40 @@
                                   Icon="Back" 
                                   Label="Back"
                                   ToolTipService.ToolTip="Go backwards one page"
-                                  Click="AB_backButton_Click"/>
+                                  Click="AB_backButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="Left"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
                     <AppBarButton x:Name="AB_forwardButton" 
                                   Icon="Forward" 
                                   Label="Forward"
                                   ToolTipService.ToolTip="Go forwards one page"
-                                  Click="AB_forwardButton_Click"/>
+                                  Click="AB_forwardButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="Right"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
                     <AppBarButton x:Name="AB_refreshButton" 
                                   Icon="Refresh" 
                                   Label="Refresh"
                                   ToolTipService.ToolTip="Refresh the current page"
-                                  Click="AB_refreshButton_Click"/>
+                                  Click="AB_refreshButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="None" Key="F5"/>
+                            <KeyboardAccelerator Modifiers="Control" Key="R"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
                     <AppBarButton x:Name="AB_homeButton" 
                                   Icon="Home" 
                                   Label="Home"
                                   ToolTipService.ToolTip="Go Home"
-                                  Click="AB_homeButton_Click"/>
+                                  Click="AB_homeButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control,Shift" Key="H"/>
+                            <KeyboardAccelerator Modifiers="Control" Key="Home"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
                 </CommandBar>
 
                 <Rectangle Grid.Column="1"
@@ -273,19 +294,33 @@
                                   Click="AB_searchButton_Click"/>
                     <AppBarButton x:Name="AB_libraryButton"
                                   Icon="Library"
-                                  Label="Settings"
+                                  Label="Library"
                                   ToolTipService.ToolTip="View your favourites and history"
-                                  Click="AB_libraryButton_Click"/>
+                                  Click="AB_libraryButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="L"/>
+                            <KeyboardAccelerator Modifiers="Control" Key="B"/>
+                            <KeyboardAccelerator Modifiers="Control" Key="H"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
                     <AppBarButton x:Name="AB_settingsButton"
                                   Icon="Setting"
                                   Label="Settings"
                                   ToolTipService.ToolTip="Change browser settings"
-                                  Click="AB_settingsButton_Click"/>
+                                  Click="AB_settingsButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control,Shift" Key="S"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
                     <AppBarButton x:Name="AB_defaultBrowserButton"
                                   Icon="World"
                                   Label="Default Browser"
                                   ToolTipService.ToolTip="Open in your default browser"
-                                  Click="AB_defaultBrowserButton_Click"/>
+                                  Click="AB_defaultBrowserButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="D"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
                 </CommandBar>
             </Grid>
             <!--#endregion-->

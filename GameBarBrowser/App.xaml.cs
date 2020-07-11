@@ -67,6 +67,47 @@ namespace GameBarBrowser
                 BrowserWindows.Add(browserWindow);
         }
 
+        public static async void QueryInDefaultBrowser(string uriString)
+        {
+            if (uriString.StartsWith(NativeView.UriPrefix))
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open page",
+                    Content = "This page cannot be open in your default browser.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+                return;
+            }
+
+            // The URI to launch
+            var uri = new Uri(uriString);
+
+            if (!uri.IsAbsoluteUri)
+                return;
+
+            // Launch the URI
+            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+
+            if (success)
+            {
+                // URI launched
+            }
+            else
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open browser",
+                    Content = "Your default browser could not be opened.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+            }
+        }
+
         protected override void OnActivated(IActivatedEventArgs args)
         {
             XboxGameBarWidgetActivatedEventArgs widgetArgs = null;

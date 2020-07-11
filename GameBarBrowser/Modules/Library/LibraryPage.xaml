@@ -41,6 +41,7 @@
                             <ListViewItem.ContextFlyout>
                                 <MenuFlyout>
                                     <MenuFlyoutItem Text="Open in a New Tab" Icon="NewWindow" Click="MF_newTab_Click"/>
+                                    <MenuFlyoutItem Text="Open in default browser" Icon="World" Click="MF_defaultBrowser_Click"/>
                                     <MenuFlyoutItem Text="Edit" Icon="Edit" Click="MF_edit_Click"/>
                                     <MenuFlyoutSubItem Text="Rearrange" Icon="Sort">
                                         <MenuFlyoutItem Text="Move Up" Click="MF_moveUp_Click"/>
@@ -73,7 +74,7 @@
                                        Style="{ThemeResource BaseTextBlockStyle}"/>
                             <TextBlock Grid.Row="1"
                                        Grid.Column="1"
-                                       Text="{x:Bind URL}"
+                                       Text="{x:Bind URI}"
                                        Style="{ThemeResource BodyTextBlockStyle}"/>
                             <TextBlock Grid.Row="0"
                                        Grid.Column="2"
