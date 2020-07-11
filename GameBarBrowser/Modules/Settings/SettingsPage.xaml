@@ -38,6 +38,9 @@
                 <ComboBoxItem Content="Bing"/>
                 <ComboBoxItem Content="Google"/>
                 <ComboBoxItem Content="DuckDuckGo"/>
+                <ComboBoxItem Content="YouTube"/>
+                <ComboBoxItem Content="Twitch"/>
+                <ComboBoxItem Content="Baidu"/>
             </ComboBox.Items>
         </ComboBox>
 

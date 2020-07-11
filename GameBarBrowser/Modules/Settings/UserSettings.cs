@@ -42,6 +42,15 @@ namespace GameBarBrowser.Settings
                     case SearchEngine.DuckDuckGo:
                         SearchEngineURL = "https://duckduckgo.com/?q={0}";
                         break;
+                    case SearchEngine.YouTube:
+                        SearchEngineURL = "https://www.youtube.com/results?search_query={0}";
+                        break;
+                    case SearchEngine.Twitch:
+                        SearchEngineURL = "https://www.twitch.tv/search?term={0}";
+                        break;
+                    case SearchEngine.Baidu:
+                        SearchEngineURL = "https://www.baidu.com/s?wd={0}";
+                        break;
                     default:
                         SearchEngineURL = "https://www.bing.com/search?q={0}";
                         break;
@@ -109,6 +118,9 @@ namespace GameBarBrowser.Settings
     {
         Bing = 0,
         Google = 1,
-        DuckDuckGo = 2
+        DuckDuckGo = 2,
+        YouTube = 3,
+        Twitch = 4,
+        Baidu = 5
     }
 }
