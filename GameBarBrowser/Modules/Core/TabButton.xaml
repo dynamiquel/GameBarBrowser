@@ -11,8 +11,8 @@
     <Button x:Name="tabButton"
             Height="36"
             MinWidth="120"
-            MaxWidth="260"
-            Width="260"
+            MaxWidth="220"
+            Width="220"
             Margin="0,0,0.5,0"
             Click="tabButton_Click">
         <Grid Width="{Binding Width, ElementName=tabButton}"

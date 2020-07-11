@@ -18,6 +18,10 @@ namespace GameBarBrowser.Core
         public BrowserWidget()
         {
             this.InitializeComponent();
+            tabScrollViewer.RegisterPropertyChangedCallback(
+                ScrollViewer.ScrollableWidthProperty,
+                tabScrollViewer_ScrollableWidthChanged);
+
             App.AddBrowser(this);
 
             tabHandler = new TabHandler(pageViewer, tabButtonsStackPanel);
@@ -27,6 +31,28 @@ namespace GameBarBrowser.Core
             tabHandler.OnCloseTabClick += HandleCloseTabClick;
 
             tabHandler.AddNewTab(true).GetAwaiter().GetResult();
+        }
+
+        private void tabScrollViewer_ScrollableWidthChanged(DependencyObject sender, DependencyProperty dp)
+        {
+            // If the scroll bar is visible, create some room for it to prevent overlapping.
+            if (tabScrollViewer.ScrollableWidth > 0)
+            {
+                if (tabScrollViewer.Padding.Bottom != 16)
+                {
+                    tabScrollViewer.Padding = new Thickness(0, 0, 0, 16);
+                    newTabButton.Margin = new Thickness(4, 0, 0, 16);
+                }
+            }
+            // If the scroll bar is no longer visible, remove the extra room.
+            else
+            {
+                if (tabScrollViewer.Padding.Bottom != 0)
+                {
+                    tabScrollViewer.Padding = new Thickness(0);
+                    newTabButton.Margin = new Thickness(4, 0, 0, 0);
+                }
+            }
         }
 
         public void Query(string query)

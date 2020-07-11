@@ -179,41 +179,10 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!--#region Where the tabs are located. -->
-        <Grid Name="tabButtonSection"
-            MaxWidth="1920"
-            HorizontalAlignment="Left">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-            </Grid.ColumnDefinitions>
-
-            <StackPanel Name="tabButtonsStackPanel"
-                        Orientation="Horizontal"
-                        Grid.Column="0"
-                        HorizontalAlignment="Left">
-            </StackPanel>
-
-            <Button x:Name="newTabButton"
-                    Width="28"
-                    Height="28"
-                    Padding="0"
-                    Margin="4,0,0,0"
-                    BorderThickness="6"
-                    Grid.Column="1"
-                    Click="newTabButton_Click">
-                <Button.KeyboardAccelerators>
-                    <KeyboardAccelerator Modifiers="Control" Key="T"/>
-                </Button.KeyboardAccelerators>
-                <SymbolIcon Symbol="Add" Height="20" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            </Button>
-
-        </Grid>
-        <!--#endregion-->
-
         <!-- Misleading name. -->
         <Grid Name="tabView"
-              Grid.Row="1">
+              Grid.Row="1"
+              Padding="0,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -333,5 +302,41 @@
                 </Grid.RowDefinitions>
             </Grid>
         </Grid>
+
+        <!--#region Where the tabs are located. -->
+        <Grid Name="tabButtonSection"
+            HorizontalAlignment="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <ScrollViewer Name="tabScrollViewer"
+                            HorizontalScrollBarVisibility="Auto" 
+                            VerticalScrollBarVisibility="Disabled" 
+                            Padding="0">
+                <StackPanel Name="tabButtonsStackPanel"
+                            Orientation="Horizontal"
+                            Grid.Column="0"
+                            HorizontalAlignment="Left">
+                </StackPanel>
+            </ScrollViewer>
+
+            <Button x:Name="newTabButton"
+                    Width="28"
+                    Height="28"
+                    Padding="0"
+                    Margin="4,0,0,0"
+                    BorderThickness="6"
+                    Grid.Column="1"
+                    Click="newTabButton_Click">
+                <Button.KeyboardAccelerators>
+                    <KeyboardAccelerator Modifiers="Control" Key="T"/>
+                </Button.KeyboardAccelerators>
+                <SymbolIcon Symbol="Add" Height="20" Width="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Button>
+
+        </Grid>
+        <!--#endregion-->
     </Grid>
 </Page>
