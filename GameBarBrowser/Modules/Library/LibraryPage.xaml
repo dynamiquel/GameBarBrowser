@@ -15,16 +15,9 @@
                     VerticalAlignment="Top" 
                     Padding="16">
             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                <Button x:Name="quitButton"  
-                        ToolTipService.ToolTip="Exit the library"
-                        Click="quitButton_Click"
-                        Height="40"
-                        Width="40">
-                    <SymbolIcon Symbol="Back"/>
-                </Button>
                 <TextBlock Text="Library" 
                            VerticalAlignment="Center" 
-                           Margin="16,0,0,0" 
+                           Margin="0,0,0,0" 
                            FontSize="24" FontWeight="Bold"/>
             </StackPanel>
 

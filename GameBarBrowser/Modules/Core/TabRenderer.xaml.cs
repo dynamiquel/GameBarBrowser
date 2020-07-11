@@ -15,8 +15,8 @@ namespace GameBarBrowser.Core
     public sealed partial class TabRenderer : Page
     {
         public PageType PageType { get => timeline[timelineIndex]; set => timeline[timelineIndex] = value; }
-        public Core.WebView WebView { get; private set; }
-        public Core.NativeView NativeView { get; private set; }
+        public WebView WebView { get; private set; }
+        public NativeView NativeView { get; private set; }
 
         public bool LoadingPage { get; private set; } = false;
         public bool CanGoBack
@@ -39,7 +39,19 @@ namespace GameBarBrowser.Core
                 return true;
             }
         }
-        public string DocumentTitle => WebView.DocumentTitle;
+        public string DocumentTitle
+        {
+            get
+            {
+                if (PageType == PageType.Web)
+                    return WebView.DocumentTitle;
+                else if (PageType == PageType.Native)
+                    return NativeView.DocumentTitle;
+
+                return "Unknown";
+            }
+        }
+
         public string Uri { get; private set; }
 
         public event Action<TabRenderer> OnNavigationStart;
@@ -83,16 +95,19 @@ namespace GameBarBrowser.Core
             if (timeline.Count > timelineIndex + 1)
                 RemoveFutureTimeline();
 
+            // If the shortcut prefix was used, attempt to get the URI for the given shortcut.
             if (query.StartsWith(ShortcutHandler.NormalShortcuts.Prefix))
                 query = ShortcutHandler.NormalShortcuts.GetUri(query);
 
-            if (query.StartsWith(NativeView.UriPrefix) || query.StartsWith(ShortcutHandler.NativeShortcuts.Prefix))
+            if (query.StartsWith(NativeView.UriPrefix))
             {
+                // Display the native view.
                 DisplayView(PageType.Native);
                 NativeView.Navigate(query);
             }
             else
             {
+                // Display the web view.
                 DisplayView(PageType.Web);
                 WebView.Navigate(query);
             }
@@ -109,6 +124,7 @@ namespace GameBarBrowser.Core
             }
         }
 
+        // TODO: Needs tweaks.
         public void GoBack()
         {
             if (CanGoBack)
@@ -147,6 +163,7 @@ namespace GameBarBrowser.Core
             }
         }
 
+        // TODO: Needs tweaks.
         public void GoForward()
         {
             if (CanGoForward)
@@ -206,7 +223,7 @@ namespace GameBarBrowser.Core
             }
         }
 
-        private void HandleNavigationStarting(Core.BaseView sender, BaseViewNavigationEventArgs args)
+        private void HandleNavigationStarting(BaseView sender, BaseViewNavigationEventArgs args)
         {
             Uri = args.Uri;
             LoadingPage = true;
@@ -226,7 +243,7 @@ namespace GameBarBrowser.Core
             OnNavigationStart?.Invoke(this);
         }
 
-        private void HandleNavigationCompleted(Core.BaseView sender, BaseViewNavigationEventArgs args)
+        private void HandleNavigationCompleted(BaseView sender, BaseViewNavigationEventArgs args)
         {
             Uri = args.Uri;
             LoadingPage = false;

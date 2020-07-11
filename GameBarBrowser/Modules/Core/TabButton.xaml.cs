@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -30,11 +31,24 @@ namespace GameBarBrowser.Core
         public event Action<TabButton> TabCloseClick;
         public event Action<TabButton> TabOpenClick;
 
-        public Image Favicon => favicon;
-
         public TabButton()
         {
             this.InitializeComponent();
+        }
+
+        public void SetFaviconSource(ImageSource source)
+        {
+            nativeFavicon.Visibility = Visibility.Collapsed;
+            favicon.Source = source;
+            favicon.Visibility = Visibility.Visible;
+        }
+
+        public void SetNativeFaviconSource(FontIcon source)
+        {
+            favicon.Visibility = Visibility.Collapsed;
+            nativeFavicon.FontFamily = source.FontFamily;
+            nativeFavicon.Glyph = source.Glyph;
+            nativeFavicon.Visibility = Visibility.Visible;
         }
 
         private void tabButton_Click(object sender, RoutedEventArgs e)

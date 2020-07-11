@@ -1,5 +1,4 @@
-﻿using GameBarBrowser.Shortcuts;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -17,6 +16,8 @@ namespace GameBarBrowser.Core
         public BrowserWidget()
         {
             this.InitializeComponent();
+            App.AddBrowser(this);
+
             tabHandler = new TabHandler(pageViewer, tabButtonsStackPanel);
 
             tabHandler.OnNavigationStart += HandleNavigationStart;
@@ -41,9 +42,9 @@ namespace GameBarBrowser.Core
             // If the tab group is the focued tab group, update the command bar.
             if (isFocusedTab)
             {
-                AB_backButton.IsEnabled = tab.TabView.CanGoBack;
-                AB_forwardButton.IsEnabled = tab.TabView.CanGoForward;
-                AB_searchBox.Text = tab.TabView.Uri;
+                AB_backButton.IsEnabled = tab.TabRenderer.CanGoBack;
+                AB_forwardButton.IsEnabled = tab.TabRenderer.CanGoForward;
+                AB_searchBox.Text = tab.TabRenderer.Uri;
                 UpdateRefreshButton(true);
             }
         }
@@ -53,9 +54,9 @@ namespace GameBarBrowser.Core
             // If the tab group is the focued tab group, update the command bar.
             if (isFocusedTab)
             {
-                AB_backButton.IsEnabled = tab.TabView.CanGoBack;
-                AB_forwardButton.IsEnabled = tab.TabView.CanGoForward;
-                AB_searchBox.Text = tab.TabView.Uri;
+                AB_backButton.IsEnabled = tab.TabRenderer.CanGoBack;
+                AB_forwardButton.IsEnabled = tab.TabRenderer.CanGoForward;
+                AB_searchBox.Text = tab.TabRenderer.Uri;
                 UpdateRefreshButton(false);
             }
         }
@@ -63,7 +64,7 @@ namespace GameBarBrowser.Core
         private void HandleCloseTabClick(TabGroup tab)
         {
             tabButtonsStackPanel.Children.Remove(tab.TabButton.Frame);
-            pageViewer.Children.Remove(tab.TabView.Frame);
+            pageViewer.Children.Remove(tab.TabRenderer.Frame);
         }
 
         private void UpdateRefreshButton(bool isLoading)
@@ -90,23 +91,23 @@ namespace GameBarBrowser.Core
 
         private void AB_backButton_Click(object sender, RoutedEventArgs e)
         {
-            if (tabHandler.FocusedTab.TabView != null && tabHandler.FocusedTab.TabView.CanGoBack)
-                tabHandler.FocusedTab.TabView.GoBack();
+            if (tabHandler.FocusedTab.TabRenderer != null && tabHandler.FocusedTab.TabRenderer.CanGoBack)
+                tabHandler.FocusedTab.TabRenderer.GoBack();
             else
                 AB_backButton.IsEnabled = false;
         }
 
         private void AB_forwardButton_Click(object sender, RoutedEventArgs e)
         {
-            if (tabHandler.FocusedTab.TabView != null && tabHandler.FocusedTab.TabView.CanGoForward)
-                tabHandler.FocusedTab.TabView.GoForward();
+            if (tabHandler.FocusedTab.TabRenderer != null && tabHandler.FocusedTab.TabRenderer.CanGoForward)
+                tabHandler.FocusedTab.TabRenderer.GoForward();
             else
                 AB_forwardButton.IsEnabled = false;
         }
 
         private void AB_refreshButton_Click(object sender, RoutedEventArgs e)
         {
-            tabHandler.FocusedTab.TabView?.Refresh();
+            tabHandler.FocusedTab.TabRenderer?.Refresh();
         }
 
         private void AB_homeButton_Click(object sender, RoutedEventArgs e)
@@ -128,7 +129,7 @@ namespace GameBarBrowser.Core
         // Workaround for the 'Game Bar options' button not working.
         private void AB_settingsButton_Click(object sender, RoutedEventArgs e)
         {
-            Query($"{ShortcutHandler.NativeShortcuts.Prefix}settings");
+            Query($"{NativeView.UriPrefix}settings");
         }
 
         private void AB_searchBox_GotFocus(object sender, RoutedEventArgs e)
@@ -140,7 +141,7 @@ namespace GameBarBrowser.Core
 
         private void AB_libraryButton_Click(object sender, RoutedEventArgs e)
         {
-            Query($"{ShortcutHandler.NativeShortcuts.Prefix}library");
+            Query($"{NativeView.UriPrefix}library");
         }
     }
 }

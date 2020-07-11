@@ -129,6 +129,8 @@
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Modules\Core\BaseView.cs" />
+    <Compile Include="Modules\Core\NativePageInfo.cs" />
+    <Compile Include="Modules\Core\NativePages.cs" />
     <Compile Include="Modules\Core\NativeView.cs" />
     <Compile Include="Modules\Core\PageType.cs" />
     <Compile Include="Modules\Core\TabHandler.cs" />
@@ -145,7 +147,6 @@
       <DependentUpon>LibraryPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Shortcuts\BaseShortcuts.cs" />
-    <Compile Include="Modules\Shortcuts\NativeShortcuts.cs" />
     <Compile Include="Modules\Shortcuts\NormalShortcuts.cs" />
     <Compile Include="Modules\Shortcuts\ShortcutHandler.cs" />
     <Compile Include="Pages\MainPage.xaml.cs">

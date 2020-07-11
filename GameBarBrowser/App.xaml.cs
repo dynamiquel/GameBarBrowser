@@ -8,6 +8,8 @@ using Microsoft.Gaming.XboxGameBar;
 using System.Collections.Generic;
 using GameBarBrowser.Core;
 using System.Diagnostics;
+using GameBarBrowser.Pages;
+using System.Linq;
 
 /// <summary>
 /// Known issues during development:
@@ -45,18 +47,24 @@ namespace GameBarBrowser
             Settings.UserSettings.LoadUserSettings();
         }
 
-        public static void Query(string query, uint browserWindowIndex = 0)
+        public static void Query(string query, int browserWindowIndex = 0)
         {
             Debug.WriteLine(BrowserWindows.Count);
             if (BrowserWindows.Count > 0 && BrowserWindows.Count > browserWindowIndex)
-                BrowserWindows[(int)browserWindowIndex].Query(query);
+                BrowserWindows[browserWindowIndex].Query(query);
         }
 
-        public static void QueryInNewTab(string query, uint browserWindowIndex = 0)
+        public static void QueryInNewTab(string query, int browserWindowIndex = 0)
         {
             Debug.WriteLine(BrowserWindows.Count);
             if (BrowserWindows.Count > 0 && BrowserWindows.Count > browserWindowIndex)
-                BrowserWindows[(int)browserWindowIndex].QueryInNewTab(query);
+                BrowserWindows[browserWindowIndex].QueryInNewTab(query);
+        }
+
+        public static void AddBrowser(BrowserWidget browserWindow)
+        {
+            if (!BrowserWindows.Contains(browserWindow))
+                BrowserWindows.Add(browserWindow);
         }
 
         protected override void OnActivated(IActivatedEventArgs args)
@@ -140,11 +148,6 @@ namespace GameBarBrowser
 
         private void RootFrame_Navigated(object sender, NavigationEventArgs e)
         {
-            var browserWindow = e.Content as BrowserWidget;
-
-            if (!BrowserWindows.Contains(browserWindow))
-                BrowserWindows.Add(e.Content as BrowserWidget);
-
             (sender as Frame).Navigated -= RootFrame_Navigated;
         }
 
@@ -177,6 +180,7 @@ namespace GameBarBrowser
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.Navigated += RootFrame_Navigated;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

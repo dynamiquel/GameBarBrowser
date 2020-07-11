@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace GameBarBrowser.Core
@@ -31,14 +32,13 @@ namespace GameBarBrowser.Core
 
         public void QueryFocusedTab(string url)
         {
-            FocusedTab.TabView?.Query(url);
+            FocusedTab.TabRenderer?.Query(url);
         }
 
         public async void QueryInNewTab(string url)
         {
             var newTab = await AddNewTab().ConfigureAwait(false);
-            newTab.TabView?.Query(url);
-            
+            newTab.TabRenderer?.Query(url);
         }
 
         public async Task<TabGroup> AddNewTab(bool forceSwitch = false)
@@ -78,11 +78,11 @@ namespace GameBarBrowser.Core
             {
                 var createdTabView = e.Content as TabRenderer;
                 createdTabView.Frame.Visibility = Visibility.Collapsed;
-                developingTab.TabView = createdTabView;
+                developingTab.TabRenderer = createdTabView;
 
                 // Subscribes to events.
-                developingTab.TabView.OnNavigationStart += HandleNavigationStart;
-                developingTab.TabView.OnNavigationComplete += HandleNavigationComplete;
+                developingTab.TabRenderer.OnNavigationStart += HandleNavigationStart;
+                developingTab.TabRenderer.OnNavigationComplete += HandleNavigationComplete;
 
                 var tabViewFrame = sender as Frame;
                 tabViewFrame.Navigated -= foo;
@@ -94,7 +94,7 @@ namespace GameBarBrowser.Core
 
             tabs.Add(developingTab);
 
-            developingTab.TabView.Query(UserSettings.HomeURL);
+            developingTab.TabRenderer.Query(UserSettings.HomeURL);
 
             if (forceSwitch || UserSettings.SwitchToNewTab)
                 SwitchTab(developingTab);
@@ -109,26 +109,30 @@ namespace GameBarBrowser.Core
 
             //AB_searchBox.PlaceholderText = $"Search with {Settings.UserSettings.SearchEngine} or enter address";
 
+            // Hides all tabs.
             foreach (var tab in tabs)
             {
                 tab.TabButton.Active = false;
-                tab.TabView.Frame.Visibility = Visibility.Collapsed;
+                tab.TabRenderer.Frame.Visibility = Visibility.Collapsed;
             }
 
+            // Shows the chosen tab.
             FocusedTab = tabToSwitchTo;
             FocusedTab.TabButton.Active = true;
-            FocusedTab.TabView.Frame.Visibility = Visibility.Visible;
-            FocusedTab.TabView.Focus(FocusState.Keyboard);
+            FocusedTab.TabRenderer.Frame.Visibility = Visibility.Visible;
+            FocusedTab.TabRenderer.Focus(FocusState.Keyboard);
         }
 
+        // Gets the tab group with the tab button.
         private TabGroup GetTabGroup(TabButton tabButton)
         {
             return tabs.First(tab => tab.TabButton == tabButton);
         }
 
-        private TabGroup GetTabGroup(TabRenderer tabView)
+        // Gets the tab group with the tab renderer.
+        private TabGroup GetTabGroup(TabRenderer tabRenderer)
         {
-            return tabs.First(tab => tab.TabView == tabView);
+            return tabs.First(tab => tab.TabRenderer == tabRenderer);
         }
 
         private void HandleNavigationStart(TabRenderer sender)
@@ -149,16 +153,20 @@ namespace GameBarBrowser.Core
         {
             var tab = GetTabGroup(sender);
 
-            if (tab.TabView.PageType == PageType.Web)
-            {
-                tab.TabButton.PageName = tab.TabView.DocumentTitle;
+            tab.TabButton.PageName = tab.TabRenderer.DocumentTitle;
 
-                if (tab.TabButton.Favicon != null)
-                    tab.TabButton.Favicon.Source = new BitmapImage(new Uri($"https://www.google.com/s2/favicons?sz=24&domain={tab.TabView.Uri}"));
-            }
-            else if (tab.TabView.PageType == PageType.Native)
+            if (tab.TabRenderer.PageType == PageType.Web)
             {
-                tab.TabButton.PageName = "Library";
+                tab.TabButton.SetFaviconSource(new BitmapImage(new Uri($"https://www.google.com/s2/favicons?sz=24&domain={tab.TabRenderer.Uri}")));
+            }
+            else if (tab.TabRenderer.PageType == PageType.Native)
+            {
+                string uri = tab.TabRenderer.Uri.Remove(0, NativeView.UriPrefix.Length);
+
+                if (NativePages.ContainsKey(uri))
+                    tab.TabButton.SetNativeFaviconSource(NativePages.Get(uri).Icon);
+                else
+                    tab.TabButton.SetNativeFaviconSource(new FontIcon { FontFamily = new FontFamily("Segoe MDL2 Assets"), Glyph = "\xE9CE" });
             }
 
             if (FocusedTab == tab)
@@ -192,8 +200,8 @@ namespace GameBarBrowser.Core
 
             OnCloseTabClick?.Invoke(tab);
 
-            tab.TabView.Frame.Content = null;
-            tab.TabView = null;
+            tab.TabRenderer.Frame.Content = null;
+            tab.TabRenderer = null;
             tabs.Remove(tab);
 
             // If there's no tabs, create one.

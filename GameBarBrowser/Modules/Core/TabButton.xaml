@@ -42,6 +42,11 @@
                        Height="20"
                        Width="20"
                        Margin="8,0,8,0"/>
+                <FontIcon x:Name="nativeFavicon"
+                          Height="20"
+                          Width="20"
+                          Margin="8,0,8,0"
+                          Visibility="Collapsed"/>
                 <TextBlock x:Name="pageName"
                            Text=""
                            VerticalAlignment="Center"

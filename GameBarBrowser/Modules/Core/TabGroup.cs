@@ -3,6 +3,6 @@
     public class TabGroup
     {
         public TabButton TabButton { get; set; }
-        public TabRenderer TabView {get; set;}
+        public TabRenderer TabRenderer {get; set;}
     }
 }
