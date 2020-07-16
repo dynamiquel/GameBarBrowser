@@ -1,5 +1,8 @@
-﻿using System;
+﻿using GameBarBrowser.Modules.Library;
+using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -27,14 +30,24 @@ namespace GameBarBrowser.Library
 
         private async void BookmarksLV_Loaded(object sender, RoutedEventArgs e)
         {
-            if (await LibraryHandler.LoadBookmarksFromDevice(true))
+            // If the bookmarks haven't been updated for a while, reload them from device.
+            if (LibraryHandler.BookmarksOutdated)
+            {
+                if (await LibraryHandler.LoadBookmarksFromDevice())
+                    RefreshBookmarks();
+            }
+            else
+            {
                 RefreshBookmarks();
+            }
         }
 
         private async void RefreshBookmarks()
         {
             FilteredBookmarks.Clear();
             var bookmarks = await Bookmarks.GetBookmarks(currentQuery);
+
+            Debug.WriteLine($"Loaded {bookmarks.Count} bookmarks.");
 
             foreach (var bookmark in bookmarks)
                 FilteredBookmarks.Add(bookmark);
@@ -57,11 +70,6 @@ namespace GameBarBrowser.Library
         {
             currentQuery = query;
             RefreshBookmarks();
-        }
-
-        private void quitButton_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Visibility = Visibility.Collapsed;
         }
 
         private void bookmarksLV_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -88,9 +96,36 @@ namespace GameBarBrowser.Library
             App.QueryInDefaultBrowser(bookmark.URI);
         }
 
-        private void MF_edit_Click(object sender, RoutedEventArgs e)
+        private async void MF_edit_Click(object sender, RoutedEventArgs e)
         {
+            var bookmark = GetSelectedBookmark();
 
+            var editContent = new EditBookmarkDialogue();
+            editContent.SiteName.Text = bookmark.Name;
+            editContent.SiteUrl.Text = bookmark.URI;
+
+            var editDialogue = new ContentDialog
+            {
+                Title = "Edit favourite",
+                Content = editContent,
+                PrimaryButtonText = "Save",
+                SecondaryButtonText = "Cancel"
+            };
+            
+            // Disables the Save button if the URL is empty.
+            editContent.TextChanged += delegate (object sender2, TextChangedEventArgs e2)
+            {
+                editDialogue.IsPrimaryButtonEnabled = !string.IsNullOrWhiteSpace((sender2 as TextBox).Text);
+            };
+
+            var result = await editDialogue.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                bookmark.Name = editContent.SiteName.Text;
+                bookmark.URI = editContent.SiteUrl.Text;
+                RefreshBookmarks();
+                await LibraryHandler.SaveBookmarksToDevice();
+            }
         }
 
         private async void MF_moveUp_Click(object sender, RoutedEventArgs e)
@@ -101,9 +136,8 @@ namespace GameBarBrowser.Library
 
             if (index > 0)
             {
-                (await Bookmarks.GetBookmarks()).Swap(index, index - 1);
+                Bookmarks.Swap(index, index - 1);
                 RefreshBookmarks();
-                await LibraryHandler.SaveBookmarksToDevice();
             }
         }
 
@@ -115,20 +149,18 @@ namespace GameBarBrowser.Library
 
             if (index < (await Bookmarks.GetBookmarks()).Count - 1)
             {
-                (await Bookmarks.GetBookmarks()).Swap(index, index + 1);
+                Bookmarks.Swap(index, index + 1);
                 RefreshBookmarks();
-                await LibraryHandler.SaveBookmarksToDevice();
             }
         }
 
         private async void MF_delete_Click(object sender, RoutedEventArgs e)
         {
-            (await Bookmarks.GetBookmarks()).Remove(GetSelectedBookmark());
+            Bookmarks.Remove(GetSelectedBookmark());
             RefreshBookmarks();
-            await LibraryHandler.SaveBookmarksToDevice();
         }
 
-        private void favouritesSearchBar_TextChanged(object sender, TextChangedEventArgs e)
+        private void bookmarksSearchBar_TextChanged(object sender, TextChangedEventArgs e)
         {
             currentQuery = (sender as TextBox).Text;
             RefreshBookmarks();
@@ -139,6 +171,42 @@ namespace GameBarBrowser.Library
             var bookmark = e.ClickedItem as Bookmark;
 
             App.QueryInNewTab(bookmark.URI);
+        }
+
+        private void MF_copyLink_Click(object sender, RoutedEventArgs e)
+        {
+            var bookmark = GetSelectedBookmark();
+
+            var dataPackage = new DataPackage();
+            dataPackage.SetText(bookmark.URI);
+            Clipboard.SetContent(dataPackage);
+        }
+
+        private async void addBookmarkButton_Click(object sender, RoutedEventArgs e)
+        {
+            var addContent = new EditBookmarkDialogue();
+
+            var addDialogue = new ContentDialog
+            {
+                Title = "Add favourite",
+                Content = addContent,
+                PrimaryButtonText = "Save",
+                SecondaryButtonText = "Cancel",
+                IsPrimaryButtonEnabled = false
+            };
+            
+            // Disables the Save button if the URL is empty.
+            addContent.TextChanged += delegate (object sender2, TextChangedEventArgs e2)
+            {
+                addDialogue.IsPrimaryButtonEnabled = !string.IsNullOrWhiteSpace((sender2 as TextBox).Text);
+            };
+
+            var result = await addDialogue.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                LibraryHandler.Bookmarks.Add(new Bookmark(addContent.SiteName.Text, addContent.SiteUrl.Text, DateTime.UtcNow));
+                RefreshBookmarks();
+            }
         }
     }
 }

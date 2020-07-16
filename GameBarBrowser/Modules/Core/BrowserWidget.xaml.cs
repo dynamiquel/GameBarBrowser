@@ -1,5 +1,5 @@
-﻿using System;
-using Windows.UI.Popups;
+﻿using GameBarBrowser.Library;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -18,6 +18,7 @@ namespace GameBarBrowser.Core
         public BrowserWidget()
         {
             this.InitializeComponent();
+
             tabScrollViewer.RegisterPropertyChangedCallback(
                 ScrollViewer.ScrollableWidthProperty,
                 tabScrollViewer_ScrollableWidthChanged);
@@ -65,6 +66,22 @@ namespace GameBarBrowser.Core
             tabHandler.QueryInNewTab(query);
         }
 
+        private void SetFullscreen(bool fullscreen)
+        {
+            var visibility = fullscreen ? Visibility.Collapsed : Visibility.Visible;
+
+            commandBar.Visibility = visibility;
+            tabButtonSection.Visibility = visibility;
+        }
+
+        private void ToggleFullscreen()
+        {
+            if (commandBar.Visibility == Visibility.Collapsed)
+                SetFullscreen(false);
+            else
+                SetFullscreen(true);
+        }
+
         private void HandleNavigationStart(TabGroup tab, bool isFocusedTab)
         {
             // If the tab group is the focued tab group, update the command bar.
@@ -109,7 +126,8 @@ namespace GameBarBrowser.Core
                 var symbol = new SymbolIcon { Symbol = Symbol.Refresh };
                 AB_refreshButton.Icon = symbol;
             }
-        }      
+        }
+
         #region Control Events
 
         private async void newTabButton_Click(object sender, RoutedEventArgs e)
@@ -165,8 +183,6 @@ namespace GameBarBrowser.Core
             (sender as TextBox).SelectAll();
         }
 
-        #endregion
-
         private void AB_libraryButton_Click(object sender, RoutedEventArgs e)
         {
             Query($"{NativeView.UriPrefix}library");
@@ -176,5 +192,18 @@ namespace GameBarBrowser.Core
         {
             App.QueryInDefaultBrowser(tabHandler.FocusedTab.TabRenderer.Uri);
         }
+
+        private void AB_fullScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleFullscreen();
+        }
+
+        private void AB_bookmarkButton_Click(object sender, RoutedEventArgs e)
+        {
+            LibraryHandler.Bookmarks.Add(new Bookmark(tabHandler.FocusedTab.TabRenderer.DocumentTitle, tabHandler.FocusedTab.TabRenderer.Uri, DateTime.UtcNow));
+        }
+
+        #endregion
+
     }
 }

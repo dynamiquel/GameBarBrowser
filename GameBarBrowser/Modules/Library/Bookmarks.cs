@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Data;
 
 namespace GameBarBrowser.Library
 {
     public class Bookmarks
     {
-        List<Bookmark> bookmarks = new List<Bookmark>();
+        public event Action BookmarksModified;
+
+        private List<Bookmark> bookmarks = new List<Bookmark>();
 
         public Task<List<Bookmark>> Query(string query)
         {
@@ -36,20 +37,45 @@ namespace GameBarBrowser.Library
             return Query(query);
         }
 
-        public void AddRange(List<Bookmark> bookmarksToAdd)
+        public void AddRange(IEnumerable<Bookmark> bookmarksToAdd)
         {
             if (bookmarks == null)
                 bookmarks = new List<Bookmark>();
 
             foreach (var bookmark in bookmarksToAdd)
                 if (!bookmarks.Any(bm => bm.Name == bookmark.Name && bm.URI == bookmark.URI))
+                {
                     bookmarks.Add(bookmark);
+                    System.Diagnostics.Debug.WriteLine("Bookmark added");
+                }
+
+            BookmarksModified?.Invoke();
         }
 
-        public void Clear()
+        public void Add(Bookmark bookmark)
+        {
+            AddRange(new Bookmark[] { bookmark });
+        }
+
+        public void Swap(int index, int newIndex)
+        {
+            bookmarks.Swap(index, newIndex);
+            BookmarksModified?.Invoke();
+        }
+
+        public void Remove(Bookmark bookmark)
+        {
+            bookmarks.Remove(bookmark);
+            BookmarksModified?.Invoke();
+        }
+
+        public void Clear(bool dontInvokeBookmarksModified = false)
         {
             if (bookmarks != null)
                 bookmarks.Clear();
+
+            if (!dontInvokeBookmarksModified)
+                BookmarksModified?.Invoke();
         }
     }
     

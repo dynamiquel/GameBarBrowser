@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace GameBarBrowser.Library
 {
@@ -14,5 +15,7 @@ namespace GameBarBrowser.Library
             FirstVisited = firstVisited;
             LastVisited = firstVisited;
         }
+
+        
     }
 }

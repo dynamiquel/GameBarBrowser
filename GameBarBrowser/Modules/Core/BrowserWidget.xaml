@@ -189,7 +189,8 @@
             </Grid.RowDefinitions>
 
             <!--#region Command and search bar. -->
-            <Grid VerticalAlignment="Top">
+            <Grid Name="commandBar" 
+                  VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -255,7 +256,7 @@
 
                 <CommandBar Grid.Column="2" 
                             HorizontalAlignment="Right"
-                            OverflowButtonVisibility="Collapsed">
+                            OverflowButtonVisibility="Auto">
                     <AppBarButton x:Name="AB_searchButton"
                                   Icon="Zoom"
                                   Label="Search"
@@ -272,24 +273,46 @@
                             <KeyboardAccelerator Modifiers="Control" Key="H"/>
                         </AppBarButton.KeyboardAccelerators>
                     </AppBarButton>
-                    <AppBarButton x:Name="AB_settingsButton"
-                                  Icon="Setting"
-                                  Label="Settings"
-                                  ToolTipService.ToolTip="Change browser settings"
-                                  Click="AB_settingsButton_Click">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control,Shift" Key="S"/>
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
-                    <AppBarButton x:Name="AB_defaultBrowserButton"
-                                  Icon="World"
-                                  Label="Default Browser"
-                                  ToolTipService.ToolTip="Open in your default browser"
-                                  Click="AB_defaultBrowserButton_Click">
-                        <AppBarButton.KeyboardAccelerators>
-                            <KeyboardAccelerator Modifiers="Control" Key="D"/>
-                        </AppBarButton.KeyboardAccelerators>
-                    </AppBarButton>
+
+                    <CommandBar.SecondaryCommands>
+                        <AppBarButton x:Name="AB_defaultBrowserButton"
+                                      Icon="World"
+                                      Label="Open page in default browser"
+                                      ToolTipService.ToolTip="Open this page in your default browser"
+                                      Click="AB_defaultBrowserButton_Click">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="D"/>
+                            </AppBarButton.KeyboardAccelerators>
+                        </AppBarButton>
+                        <AppBarButton x:Name="AB_bookmarkButton"
+                                      Icon="Favorite"
+                                      Label="Add page to favourites"
+                                      ToolTipService.ToolTip="Add this page to favourites"
+                                      Click="AB_bookmarkButton_Click">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control" Key="D"/>
+                            </AppBarButton.KeyboardAccelerators>
+                        </AppBarButton>
+                        <AppBarButton x:Name="AB_fullScreenButton"
+                                      Icon="FullScreen"
+                                      Label="Fullscreen"
+                                      ToolTipService.ToolTip="Toggle fullscreen mode"
+                                      Click="AB_fullScreenButton_Click">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="None" Key="F11"/>
+                            </AppBarButton.KeyboardAccelerators>
+                        </AppBarButton>
+                        <AppBarSeparator/>
+                        <AppBarButton x:Name="AB_settingsButton"
+                                      Icon="Setting"
+                                      Label="Settings"                                 
+                                      ToolTipService.ToolTip="Change browser settings"
+                                      Click="AB_settingsButton_Click">
+                            <AppBarButton.KeyboardAccelerators>
+                                <KeyboardAccelerator Modifiers="Control,Shift" Key="S"/>
+                            </AppBarButton.KeyboardAccelerators>
+                        </AppBarButton>
+                    </CommandBar.SecondaryCommands>
                 </CommandBar>
             </Grid>
             <!--#endregion-->

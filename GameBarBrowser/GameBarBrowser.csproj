@@ -141,6 +141,9 @@
     <Compile Include="Modules\Core\BrowserWidget.xaml.cs">
       <DependentUpon>BrowserWidget.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Library\EditBookmarkDialogue.xaml.cs">
+      <DependentUpon>EditBookmarkDialogue.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Library\History.cs" />
     <Compile Include="Modules\Library\LibraryHandler.cs" />
     <Compile Include="Modules\Library\LibraryPage.xaml.cs">
@@ -256,6 +259,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Modules\Core\BrowserWidget.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\Library\EditBookmarkDialogue.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

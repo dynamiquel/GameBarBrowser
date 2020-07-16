@@ -9,11 +9,13 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Auto">
         <StackPanel Orientation="Vertical" 
                     HorizontalAlignment="Left" 
                     VerticalAlignment="Top" 
                     Padding="16">
+
             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                 <TextBlock Text="Library" 
                            VerticalAlignment="Center" 
@@ -21,14 +23,40 @@
                            FontSize="24" FontWeight="Bold"/>
             </StackPanel>
 
-            <TextBlock Text="FAVOURITES" Margin="0,16,0,8" FontSize="16" Foreground="Gray" FontWeight="SemiBold"/>
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,16,0,8">
+                <FontIcon Glyph="&#xE728;" 
+                          FontSize="16" 
+                          Margin="0,0,8,-1" 
+                          Foreground="Gray"/>
+                <TextBlock Text="FAVOURITES" 
+                           Margin="0,0,0,0"
+                           FontSize="16"
+                           Foreground="Gray" 
+                           FontWeight="SemiBold"/>
+            </StackPanel>
+            
 
-            <TextBox x:Name="favouritesSearchBar"
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <TextBox x:Name="bookmarksSearchBar"
                      PlaceholderText="Search Favourites"
-                     Margin="0,0,0,8"
-                     Width="500"
-                     HorizontalAlignment="Left"
-                     TextChanged="favouritesSearchBar_TextChanged"/>
+                     HorizontalAlignment="Stretch"
+                     TextChanged="bookmarksSearchBar_TextChanged"
+                     MinWidth="450"/>
+                <Button Grid.Column="1"
+                        Margin="8,0,0,0"
+                        ToolTipService.ToolTip="Add a new favourite"
+                        Name="addBookmarkButton"
+                        Click="addBookmarkButton_Click">
+                    <SymbolIcon Symbol="Add"/>
+                </Button>
+            </Grid>
+            
             <ListView x:Name="bookmarksLV"
                       ItemsSource="{x:Bind FilteredBookmarks}"
                       SelectionMode="None"
@@ -40,8 +68,10 @@
                         <ListViewItem RightTapped="bookmarksLV_RightTapped">
                             <ListViewItem.ContextFlyout>
                                 <MenuFlyout>
-                                    <MenuFlyoutItem Text="Open in a New Tab" Icon="NewWindow" Click="MF_newTab_Click"/>
+                                    <MenuFlyoutItem Text="Open in New Tab" Icon="NewWindow" Click="MF_newTab_Click"/>
                                     <MenuFlyoutItem Text="Open in default browser" Icon="World" Click="MF_defaultBrowser_Click"/>
+                                    <MenuFlyoutItem Text="Copy link" Icon="Link" Click="MF_copyLink_Click"/>
+                                    <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Text="Edit" Icon="Edit" Click="MF_edit_Click"/>
                                     <MenuFlyoutSubItem Text="Rearrange" Icon="Sort">
                                         <MenuFlyoutItem Text="Move Up" Click="MF_moveUp_Click"/>
@@ -52,10 +82,10 @@
                             </ListViewItem.ContextFlyout>
                             <Grid Padding="0,8,0,8"
                               ColumnSpacing="8">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="*"/>
-                            </Grid.RowDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="300"/>
@@ -68,25 +98,36 @@
                                    Width="32"
                                    Height="32"
                                    Source="{x:Bind Favicon}"/>
-                            <TextBlock Grid.Row="0"
+                                <TextBlock Grid.Row="0"
                                        Grid.Column="1"
                                        Text="{x:Bind Name}"
                                        Style="{ThemeResource BaseTextBlockStyle}"/>
-                            <TextBlock Grid.Row="1"
+                                <TextBlock Grid.Row="1"
                                        Grid.Column="1"
                                        Text="{x:Bind URI}"
                                        Style="{ThemeResource BodyTextBlockStyle}"/>
-                            <TextBlock Grid.Row="0"
+                                <TextBlock Grid.Row="0"
                                        Grid.Column="2"
                                        Text="{x:Bind LastVisited}"
                                        Style="{ThemeResource BodyTextBlockStyle}"/>
-                        </Grid>
+                            </Grid>
                         </ListViewItem>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
-            <TextBlock Text="HISTORY" Margin="0,28,0,8" FontSize="16" Foreground="Gray" FontWeight="SemiBold"/>
+            <StackPanel Orientation="Horizontal"
+                        Margin="0,36,0,8">
+                <FontIcon Glyph="&#xE81C;" 
+                          FontSize="16" 
+                          Margin="0,0,8,-1" 
+                          Foreground="Gray"/>
+                <TextBlock Text="HISTORY" 
+                           Margin="0,0,0,0"
+                           FontSize="16"
+                           Foreground="Gray" 
+                           FontWeight="SemiBold"/>
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </Page>

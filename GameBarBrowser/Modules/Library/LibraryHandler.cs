@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Storage;
 
 namespace GameBarBrowser.Library
 {
@@ -9,10 +8,21 @@ namespace GameBarBrowser.Library
     {
         public static Bookmarks Bookmarks { get; private set; } = new Bookmarks();
         public static History History { get; private set; } = new History();
+        public static bool BookmarksOutdated => DateTime.UtcNow > nextBookmarkLoad;
 
-        private static readonly StorageFolder RoamingFolder = ApplicationData.Current.RoamingFolder;
         private static readonly string bookmarksPath = "bookmarks.json";
         private static readonly string historyPath = "history.json";
+        private static DateTime nextBookmarkLoad = DateTime.UtcNow;
+
+        static LibraryHandler()
+        {
+            Bookmarks.BookmarksModified += HandleBookmarksModified;
+        }
+
+        private static async void HandleBookmarksModified()
+        {
+            await SaveBookmarksToDevice();
+        }
 
         public static async Task SaveBookmarksToDevice()
         {
@@ -22,7 +32,7 @@ namespace GameBarBrowser.Library
         public static async Task<bool> LoadBookmarksFromDevice(bool refresh = false)
         {
             if (refresh)
-                Bookmarks.Clear();
+                Bookmarks.Clear(true);
 
             if (await Utilities.IsFilePresent(bookmarksPath))
             {
@@ -47,9 +57,12 @@ namespace GameBarBrowser.Library
                     new Bookmark("YouTube", "https://youtube.com/", DateTime.UtcNow),
                     new Bookmark("Twitch", "https://twitch.tv/", DateTime.UtcNow),
                     new Bookmark("Xbox", "https://xbox.com/", DateTime.UtcNow),
-                    new Bookmark("Steam", "https://steampowered.com/", DateTime.UtcNow)
+                    new Bookmark("Steam", "https://steampowered.com/", DateTime.UtcNow),
+                    new Bookmark("New Features", "::/newfeatures", DateTime.UtcNow)
                 });
             }
+
+            nextBookmarkLoad = DateTime.UtcNow.AddMinutes(1);
 
             return true;
         }
