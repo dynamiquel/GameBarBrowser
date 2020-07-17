@@ -14,11 +14,11 @@ This web browser is really basic but one didn't exist for the Xbox Game Bar at t
 - Tabs
 
 ## Expected v2.0 features
-- Bookmarks (Partially implemented. Can only create or edit bookmarks through the JSON file)
+- Bookmarks (Implemented)
 - History
 - URL Shortcuts (Implemented)
 - Keyboard Shortcuts (Implemented, with some limitations)
-- Full-screen support
+- Full-screen support (Partially implemented)
 - Open webpage in system's default browser (Implemented)
 - Use browser without the Game Bar (Implemented)
 - Access XAML Pages just like a webpage (Implemented)
