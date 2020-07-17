@@ -101,11 +101,13 @@
                                 <TextBlock Grid.Row="0"
                                        Grid.Column="1"
                                        Text="{x:Bind Name}"
-                                       Style="{ThemeResource BaseTextBlockStyle}"/>
+                                       Style="{ThemeResource BaseTextBlockStyle}"
+                                       MaxLines="2"/>
                                 <TextBlock Grid.Row="1"
                                        Grid.Column="1"
                                        Text="{x:Bind URI}"
-                                       Style="{ThemeResource BodyTextBlockStyle}"/>
+                                       Style="{ThemeResource BodyTextBlockStyle}"
+                                       MaxLines="2"/>
                                 <TextBlock Grid.Row="0"
                                        Grid.Column="2"
                                        Text="{x:Bind LastVisited}"
@@ -128,6 +130,82 @@
                            Foreground="Gray" 
                            FontWeight="SemiBold"/>
             </StackPanel>
+
+            <Grid Margin="0,0,0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBox x:Name="historySearchBar"
+                     PlaceholderText="Search History"
+                     HorizontalAlignment="Stretch"
+                     TextChanged="historySearchBar_TextChanged"
+                     MinWidth="450"/>
+                <Button Grid.Column="1"
+                        Margin="8,0,0,0"
+                        ToolTipService.ToolTip="Clear your history"
+                        Name="deleteHistoryButton"
+                        Click="deleteHistoryButton_Click">
+                    <FontIcon Glyph="&#xED60;"/>
+                </Button>
+            </Grid>
+
+            <ListView x:Name="historyLV"
+                      ItemsSource="{x:Bind FilteredHistory}"
+                      SelectionMode="None"
+                      IsItemClickEnabled="True"
+                      ItemClick="historyLV_ItemClick">
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="library:Artifact">
+                        <ListViewItem RightTapped="historyLV_RightTapped">
+                            <ListViewItem.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Open in New Tab" Icon="NewWindow" Click="MFH_newTab_Click"/>
+                                    <MenuFlyoutItem Text="Open in default browser" Icon="World" Click="MFH_defaultBrowser_Click"/>
+                                    <MenuFlyoutItem Text="Copy link" Icon="Link" Click="MFH_copyLink_Click"/>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Text="Delete" Icon="Delete" Click="MFH_delete_Click"/>
+                                </MenuFlyout>
+                            </ListViewItem.ContextFlyout>
+                            <Grid Padding="0,8,0,8"
+                              ColumnSpacing="8">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="300"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Row="0"
+                                   Grid.RowSpan="2"
+                                   Grid.Column="0"
+                                   Width="32"
+                                   Height="32"
+                                   Source="{x:Bind Favicon}"/>
+                                <TextBlock Grid.Row="0"
+                                       Grid.Column="1"
+                                       Text="{x:Bind Name}"
+                                       Style="{ThemeResource BaseTextBlockStyle}"
+                                       MaxLines="2"/>
+                                <TextBlock Grid.Row="1"
+                                       Grid.Column="1"
+                                       Text="{x:Bind URI}"
+                                       Style="{ThemeResource BodyTextBlockStyle}"
+                                       MaxLines="2"/>
+                                <TextBlock Grid.Row="0"
+                                       Grid.Column="2"
+                                       Text="{x:Bind LastVisited}"
+                                       Style="{ThemeResource BodyTextBlockStyle}"/>
+                            </Grid>
+                        </ListViewItem>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackPanel>
     </ScrollViewer>
 </Page>

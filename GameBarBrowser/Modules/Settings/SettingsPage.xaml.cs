@@ -16,6 +16,8 @@ namespace GameBarBrowser.Settings
             this.InitializeComponent();
             homePageURLTextBox.Text = UserSettings.HomeURL;
             switchToNewTabsCheckBox.IsChecked = UserSettings.SwitchToNewTab;
+            recordHistory.IsChecked = UserSettings.RecordHistory;
+            ignoreDuplicatedHistory.IsChecked = UserSettings.IgnoreDuplicatedHistory;
         }
 
         private void searchEngineComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -44,6 +46,20 @@ namespace GameBarBrowser.Settings
             var checkBox = sender as CheckBox;
 
             UserSettings.SwitchToNewTab = (bool) checkBox.IsChecked;
+        }
+
+        private void recordHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+
+            UserSettings.RecordHistory = (bool)checkBox.IsChecked;
+        }
+
+        private void ignoreDuplicatedHistory_Click(object sender, RoutedEventArgs e)
+        {
+            var checkBox = sender as CheckBox;
+
+            UserSettings.IgnoreDuplicatedHistory = (bool)checkBox.IsChecked;
         }
     }
 }

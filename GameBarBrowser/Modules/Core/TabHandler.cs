@@ -153,6 +153,8 @@ namespace GameBarBrowser.Core
 
         private void HandleNavigationComplete(TabRenderer sender)
         {
+            Library.LibraryHandler.History.Add(new Library.Artifact(sender.DocumentTitle, sender.Uri, DateTime.UtcNow));
+
             var tab = GetTabGroup(sender);
 
             tab.TabButton.PageName = tab.TabRenderer.DocumentTitle;

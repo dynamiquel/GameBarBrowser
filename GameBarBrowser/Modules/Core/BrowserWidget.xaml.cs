@@ -18,6 +18,7 @@ namespace GameBarBrowser.Core
         public BrowserWidget()
         {
             this.InitializeComponent();
+            tabView.Loaded += OnStart;
 
             tabScrollViewer.RegisterPropertyChangedCallback(
                 ScrollViewer.ScrollableWidthProperty,
@@ -32,6 +33,12 @@ namespace GameBarBrowser.Core
             tabHandler.OnCloseTabClick += HandleCloseTabClick;
 
             tabHandler.AddNewTab(true).GetAwaiter().GetResult();
+        }
+
+        // Workaround for an async constructor.
+        private async void OnStart(object sender, RoutedEventArgs e)
+        {
+            await LibraryHandler.LoadHistoryFromDevice();
         }
 
         private void tabScrollViewer_ScrollableWidthChanged(DependencyObject sender, DependencyProperty dp)

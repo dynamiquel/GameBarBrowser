@@ -1,4 +1,5 @@
-﻿using GameBarBrowser.Shortcuts;
+﻿using GameBarBrowser.Library;
+using GameBarBrowser.Shortcuts;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

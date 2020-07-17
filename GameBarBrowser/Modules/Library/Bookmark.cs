@@ -15,7 +15,5 @@ namespace GameBarBrowser.Library
             FirstVisited = firstVisited;
             LastVisited = firstVisited;
         }
-
-        
     }
 }

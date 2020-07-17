@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameBarBrowser.Library
@@ -9,14 +10,19 @@ namespace GameBarBrowser.Library
         public static Bookmarks Bookmarks { get; private set; } = new Bookmarks();
         public static History History { get; private set; } = new History();
         public static bool BookmarksOutdated => DateTime.UtcNow > nextBookmarkLoad;
+        public static bool HistoryOutdated => DateTime.UtcNow > nextHistoryLoad;
+        public static bool HistoryLoaded;
 
         private static readonly string bookmarksPath = "bookmarks.json";
         private static readonly string historyPath = "history.json";
         private static DateTime nextBookmarkLoad = DateTime.UtcNow;
+        private static DateTime nextHistoryLoad = DateTime.UtcNow;
+
 
         static LibraryHandler()
         {
             Bookmarks.BookmarksModified += HandleBookmarksModified;
+            History.HistoryModified += HandleHistoryModified;
         }
 
         private static async void HandleBookmarksModified()
@@ -67,21 +73,39 @@ namespace GameBarBrowser.Library
             return true;
         }
 
-        public static async Task LoadHistoryFromDevice(bool refresh = false)
+        private static async void HandleHistoryModified()
+        {
+            History.GetArtifacts().GetAwaiter().GetResult().OrderBy(a => a.LastVisited);
+            await SaveHistoryToDevice().ConfigureAwait(false);
+        }
+
+        public static async Task SaveHistoryToDevice()
+        {
+            await Utilities.SerialiseJson(historyPath, await History.GetArtifacts().ConfigureAwait(false)).ConfigureAwait(false);
+        }
+
+        public static async Task<bool> LoadHistoryFromDevice(bool refresh = false)
         {
             if (refresh)
-                History.Clear();
+                History.Clear(true);
 
-            try
+            if (await Utilities.IsFilePresent(bookmarksPath))
             {
-                var storedHistory = await Utilities.DeserialiseJson<List<Artifact>>("history.json").ConfigureAwait(false);
+                try
+                {
+                    var storedHistory = await Utilities.DeserialiseJson<List<Artifact>>(historyPath).ConfigureAwait(false);
+                    History.AddRange(storedHistory.OrderBy(a => a.LastVisited).Reverse());
+                    HistoryLoaded = true;
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("No artifacts found on device.");
+                }
+            }
 
-                History.AddRange(storedHistory);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("No Bookmarks found on device.");
-            }
+            nextHistoryLoad = DateTime.UtcNow.AddMinutes(1);
+
+            return true;
         }   
     }
 }

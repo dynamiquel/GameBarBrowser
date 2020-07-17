@@ -52,7 +52,24 @@
                   HorizontalAlignment="Stretch"
                   HorizontalContentAlignment="Right"
                   ToolTipService.ToolTip="Enabled: When a new tab is created, the browser will automatically switch to it."/>
-        
+
+        <CheckBox Name="recordHistory"
+                  Margin="0,0,0,8"
+                  Click="recordHistory_Click"
+                  Content="Record history"
+                  FlowDirection="RightToLeft"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Right"
+                  ToolTipService.ToolTip="Enabled: The webpages you visit are saved on your device."/>
+        <CheckBox Name="ignoreDuplicatedHistory"
+                  Margin="0,0,0,8"
+                  Click="ignoreDuplicatedHistory_Click"
+                  Content="Ignore duplicated history entries"
+                  FlowDirection="RightToLeft"
+                  HorizontalAlignment="Stretch"
+                  HorizontalContentAlignment="Right"
+                  ToolTipService.ToolTip="Enabled: When visiting a webpage you have visited before, the previous history entry is updated instead of creating a new one."/>
+
 
         <TextBlock Text="ABOUT" Margin="0,28,0,8" FontSize="16" Foreground="Gray"/>
         <TextBlock TextWrapping="Wrap">

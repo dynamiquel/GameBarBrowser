@@ -74,6 +74,32 @@ namespace GameBarBrowser.Settings
             }
         }
 
+        private static bool _recordHistory;
+        public static bool RecordHistory
+        {
+            get => _recordHistory;
+            set
+            {
+                _recordHistory = value;
+
+                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                storedSettings.Values["recordHistory"] = value;
+            }
+        }
+
+        private static bool _ignoreDuplicatedHistory;
+        public static bool IgnoreDuplicatedHistory
+        {
+            get => _ignoreDuplicatedHistory;
+            set
+            {
+                _ignoreDuplicatedHistory = value;
+
+                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                storedSettings.Values["ignoreDuplicatedHistory"] = value;
+            }
+        }
+
         public static void LoadUserSettings()
         {
             var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
@@ -99,6 +125,24 @@ namespace GameBarBrowser.Settings
             {
                 SwitchToNewTab = true;
             }
+
+            try
+            {
+                RecordHistory = bool.Parse(storedSettings.Values["recordHistory"] as string);
+            }
+            catch (Exception e)
+            {
+                RecordHistory = true;
+            }
+
+            try
+            {
+                IgnoreDuplicatedHistory = bool.Parse(storedSettings.Values["ignoreDuplicatedHistory"] as string);
+            }
+            catch (Exception e)
+            {
+                IgnoreDuplicatedHistory = true;
+            }
         }
 
         private static void CreateUserSettings(Windows.Storage.ApplicationDataContainer storedSettings)
@@ -111,6 +155,12 @@ namespace GameBarBrowser.Settings
 
             if (!storedSettings.Values.ContainsKey("switchToNewTab"))
                 storedSettings.Values["switchToNewTab"] = true;
+
+            if (!storedSettings.Values.ContainsKey("recordHistory"))
+                storedSettings.Values["recordHistory"] = true;
+
+            if (!storedSettings.Values.ContainsKey("ignoreDuplicatedHistory"))
+                storedSettings.Values["ignoreDuplicatedHistory"] = true;
         }
     }
 
