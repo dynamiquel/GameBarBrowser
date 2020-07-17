@@ -15,7 +15,7 @@ This web browser is really basic but one didn't exist for the Xbox Game Bar at t
 
 ## Expected v2.0 features
 - Bookmarks (Implemented)
-- History
+- History (Implemented)
 - URL Shortcuts (Implemented)
 - Keyboard Shortcuts (Implemented, with some limitations)
 - Full-screen support (Partially implemented)
