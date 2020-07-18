@@ -76,9 +76,11 @@ namespace GameBarBrowser.Core
         private void SetFullscreen(bool fullscreen)
         {
             var visibility = fullscreen ? Visibility.Collapsed : Visibility.Visible;
+            var oppositeVisibility = fullscreen ? Visibility.Visible : Visibility.Collapsed;
 
             commandBar.Visibility = visibility;
             tabButtonSection.Visibility = visibility;
+            exitFullScreenButton.Visibility = oppositeVisibility;
         }
 
         private void ToggleFullscreen()
@@ -210,7 +212,11 @@ namespace GameBarBrowser.Core
             LibraryHandler.Bookmarks.Add(new Bookmark(tabHandler.FocusedTab.TabRenderer.DocumentTitle, tabHandler.FocusedTab.TabRenderer.Uri, DateTime.UtcNow));
         }
 
-        #endregion
+        private void exitFullScreenButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetFullscreen(false);
+        }
 
+        #endregion
     }
 }

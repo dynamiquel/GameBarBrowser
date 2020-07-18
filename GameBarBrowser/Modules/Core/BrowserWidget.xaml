@@ -179,6 +179,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        
+
         <!-- Misleading name. -->
         <Grid Name="tabView"
               Grid.Row="1"
@@ -360,6 +362,38 @@
             </Button>
 
         </Grid>
+
+        <!-- Floating exit fullscreen button -->
+        <Canvas HorizontalAlignment="Right">
+            <Button x:Name="exitFullScreenButton"
+                    Canvas.Left="-54"
+                    Click="exitFullScreenButton_Click"
+                    Visibility="Collapsed"
+                    Background="White"
+                    Opacity="0.5"
+                    Foreground="Black"
+                    ToolTipService.ToolTip="Exit fullscreen mode">
+                <Button.Resources>
+                    <ResourceDictionary>
+                        <ResourceDictionary.ThemeDictionaries>
+                            <ResourceDictionary x:Key="Dark">
+                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="White"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="Black"/>
+                                <SolidColorBrush x:Key="ButtonForegroundPressed" Color="White"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="Black"/>
+                            </ResourceDictionary>
+                            <ResourceDictionary x:Key="Light">
+                                <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="Black"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="White"/>
+                                <SolidColorBrush x:Key="ButtonForegroundPressed" Color="Black"/>
+                                <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="White"/>
+                            </ResourceDictionary>
+                        </ResourceDictionary.ThemeDictionaries>
+                    </ResourceDictionary>
+                </Button.Resources>
+                <SymbolIcon Symbol="BackToWindow"/>
+            </Button>
+        </Canvas>
         <!--#endregion-->
     </Grid>
 </Page>
