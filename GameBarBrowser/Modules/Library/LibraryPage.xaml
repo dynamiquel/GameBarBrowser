@@ -74,8 +74,16 @@
                                     <MenuFlyoutSeparator/>
                                     <MenuFlyoutItem Text="Edit" Icon="Edit" Click="MF_edit_Click"/>
                                     <MenuFlyoutSubItem Text="Rearrange" Icon="Sort">
-                                        <MenuFlyoutItem Text="Move Up" Click="MF_moveUp_Click"/>
-                                        <MenuFlyoutItem Text="Move Down" Click="MF_moveDown_Click"/>
+                                        <MenuFlyoutItem Text="Move Up" Click="MF_moveUp_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE74A;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Move Down" Click="MF_moveDown_Click">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE74B;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
                                     </MenuFlyoutSubItem>
                                     <MenuFlyoutItem Text="Delete" Icon="Delete" Click="MF_delete_Click"/>
                                 </MenuFlyout>

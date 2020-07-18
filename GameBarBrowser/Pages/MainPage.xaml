@@ -8,6 +8,116 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid x:Name="content">
+    <Grid Name="content">
+        <Pivot Name="ModsPivot" 
+               SelectedIndex="0">
+            <PivotItem Name="AllModsPI"
+                       Header="All">
+                <Grid Margin="16">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBox PlaceholderText="Search mods"
+                             HorizontalAlignment="Stretch"
+                             MinWidth="450"                        
+                             Margin="0,0,0,12"/>
+                    
+                    <ScrollViewer Grid.Row="1" 
+                                  VerticalScrollBarVisibility="Auto">
+                        <ListView SelectionMode="Multiple"
+                                  CanReorderItems="True">
+                            <ListViewItem>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="Mod 1"/>
+                                    <Button Grid.Column="1">
+                                        <SymbolIcon Symbol="Add"/>
+                                    </Button>
+                                </Grid>
+                                <ListViewItem.ContextFlyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Favourite" Icon="Favorite"/>
+                                        <MenuFlyoutItem Text="View details">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE946;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Show in Explorer">
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xEC50;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutSeparator/>
+                                        <MenuFlyoutSubItem Text="Rearrange" Icon="Sort">
+                                            <MenuFlyoutItem Text="Move Up">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE74A;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                            <MenuFlyoutItem Text="Move Down">
+                                                <MenuFlyoutItem.Icon>
+                                                    <FontIcon Glyph="&#xE74B;"/>
+                                                </MenuFlyoutItem.Icon>
+                                            </MenuFlyoutItem>
+                                        </MenuFlyoutSubItem>
+                                        <MenuFlyoutItem Text="Delete" Icon="Delete"/>
+                                    </MenuFlyout>
+                                </ListViewItem.ContextFlyout>
+                            </ListViewItem>
+                            <ListViewItem Content="Mod 2"/>
+                            <ListViewItem Content="Mod 4"/>
+                            <ListViewItem Content="Mod 5"/>
+                            <ListViewItem Content="Mod 6"/>
+                            <ListViewItem Content="Mod 7"/>
+                            <ListViewItem Content="Mod 8"/>
+                            <ListViewItem Content="Mod 9"/>
+                            <ListViewItem Content="Mod 10"/>
+                            <ListViewItem Content="Mod 11"/>
+                            <ListViewItem Content="Mod 12"/>
+                            <ListViewItem Content="Mod 13"/>
+                            <ListViewItem Content="Mod 14"/>
+                            <ListViewItem Content="Mod 1"/>
+                            <ListViewItem Content="Mod 2"/>
+                            <ListViewItem Content="Mod 4"/>
+                            <ListViewItem Content="Mod 5"/>
+                            <ListViewItem Content="Mod 6"/>
+                            <ListViewItem Content="Mod 7"/>
+                            <ListViewItem Content="Mod 8"/>
+                            <ListViewItem Content="Mod 9"/>
+                            <ListViewItem Content="Mod 10"/>
+                            <ListViewItem Content="Mod 11"/>
+                            <ListViewItem Content="Mod 12"/>
+                            <ListViewItem Content="Mod 13"/>
+                            <ListViewItem Content="Mod 14"/>
+                        </ListView>
+                    </ScrollViewer>
+                    
+
+                    <StackPanel Grid.Row="2" 
+                                Orientation="Horizontal"
+                                Margin="8,24,8,8"
+                                Spacing="8">
+                        <Button Content="Save"
+                                MinWidth="120"/>
+                        <Button Content="Create Modpack"
+                                MinWidth="120"/>
+                    </StackPanel>
+                </Grid>
+            </PivotItem>
+            <PivotItem Name="InstalledModsPI"
+                       Header="Installed">
+            </PivotItem>
+            <PivotItem Name="DownloadingModsPI"
+                       Header="Downloading">
+            </PivotItem>
+
+        </Pivot>
     </Grid>
 </Page>
