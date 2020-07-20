@@ -3,6 +3,7 @@ using GameBarBrowser.Shortcuts;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -24,8 +25,8 @@ namespace GameBarBrowser.Core
         {
             get
             {
-                if (timeline.Count <= 1 || timelineIndex == 0)
-                    return false;
+                /*if (timeline.Count <= 1 || timelineIndex == 0)
+                    return false;*/
 
                 return true;
             }
@@ -34,8 +35,8 @@ namespace GameBarBrowser.Core
         {
             get
             {
-                if (timeline.Count <= 1 || timelineIndex == timeline.Count - 1)
-                    return false;
+                /*if (timeline.Count <= 1 || timelineIndex == timeline.Count - 1)
+                    return false;*/
 
                 return true;
             }
@@ -128,86 +129,89 @@ namespace GameBarBrowser.Core
         // TODO: Needs tweaks.
         public void GoBack()
         {
-            if (CanGoBack)
+            var newPageType = timeline[timelineIndex - 1];
+            var newView = GetView(newPageType);
+
+            if (newPageType != PageType && timeline.IndexOf(PageType) != timelineIndex)
             {
-                PageType currentPageType = PageType;
-                PageType previousPageType = timeline[timelineIndex - 1];
-
-                DisplayView(previousPageType);
-
-                if (previousPageType == PageType.Web)
-                {
-                    timelineIndex--;
-
-                    if (currentPageType == previousPageType)
-                    {
-                        WebView.GoBack();
-                    }
-                    else
-                    {
-                        HandleNavigationCompleted(WebView, new BaseViewNavigationEventArgs { Uri = WebView.Uri });
-                    }
-                }
-                else if (previousPageType == PageType.Native)
-                {
-                    timelineIndex--;
-
-                    if (currentPageType == previousPageType)
-                    {
-                        NativeView.GoBack();
-                    }
-                    else
-                    {
-                        HandleNavigationCompleted(NativeView, new BaseViewNavigationEventArgs { Uri = NativeView.Uri });
-                    }
-                }
+                GetView(PageType).BackPending = true;
+                Debug.WriteLine($"Back pending for {GetView(PageType)}");
             }
+
+            newView.ForwardPending = false;
+
+            if (newView.CanGoBack && newPageType == PageType)
+                newView.GoBack();
+            else if (newPageType != PageType && newView.BackPending)
+            {
+                newView.GoBack();
+                newView.BackPending = false;
+                Debug.WriteLine($"Back removed for {newView}");
+            }
+            else
+                HandleNavigationCompleted(newView, new BaseViewNavigationEventArgs { Uri = newView.Uri });
+
+            timelineIndex--;
+            Debug.WriteLine($"Index: {timelineIndex} - Timeline count: {timeline.Count}");
+
+            DisplayView(newPageType);
         }
 
         // TODO: Needs tweaks.
         public void GoForward()
         {
-            if (CanGoForward)
+            var newPageType = timeline[timelineIndex + 1];
+            var newView = GetView(newPageType);
+
+            if (newPageType != PageType && timeline.LastIndexOf(PageType) != timelineIndex)
             {
-                PageType currentPageType = PageType;
-                PageType forwardPageType = timeline[timelineIndex + 1];
-
-                DisplayView(forwardPageType);
-
-                if (forwardPageType == PageType.Web)
-                {
-                    timelineIndex++;
-
-                    if (currentPageType == forwardPageType)
-                    {
-                        WebView.GoForward();
-                    }
-                    else
-                    {
-                        HandleNavigationCompleted(WebView, new BaseViewNavigationEventArgs { Uri = WebView.Uri });
-                    }
-                }
-                else if (forwardPageType == PageType.Native)
-                {
-                    timelineIndex++;
-
-                    if (currentPageType == forwardPageType)
-                    {
-                        NativeView.GoForward();
-                    }
-                    else
-                    {
-                        HandleNavigationCompleted(NativeView, new BaseViewNavigationEventArgs { Uri = NativeView.Uri });
-                    }
-                }
+                GetView(PageType).ForwardPending = true;
+                Debug.WriteLine($"Forward pending for {GetView(PageType)}");
             }
+
+            newView.BackPending = false;
+
+            if (newView.CanGoForward && newPageType == PageType)
+                newView.GoForward();
+            else if (newPageType != PageType && newView.ForwardPending)
+            {
+                newView.GoForward();
+                newView.ForwardPending = false;
+                Debug.WriteLine($"Forward removed for {newView}");
+            }
+            else
+                HandleNavigationCompleted(newView, new BaseViewNavigationEventArgs { Uri = newView.Uri });
+
+            timelineIndex++;
+            Debug.WriteLine($"Index: {timelineIndex} - Timeline count: {timeline.Count}");
+
+            DisplayView(newPageType);
+        }
+
+        private BaseView GetView(PageType pageType)
+        {
+            if (pageType == PageType.Native)
+                return NativeView;
+
+            return WebView;
         }
 
         private void RemoveFutureTimeline()
         {
+            var recentView = GetView(timeline[timeline.Count - 1]);
+            if (recentView.BackPending)
+            {
+                recentView.GoBack();
+                recentView.BackPending = false;
+                timeline.RemoveAt(timeline.Count - 1);
+            }
+
             var pagesToRemove = timeline.Count - timelineIndex - 1;
             Debug.WriteLine($"Count: {timeline.Count}, Index: {timelineIndex}, To Remove: {pagesToRemove}");
             timeline.RemoveRange(timelineIndex + 1, pagesToRemove);
+
+            WebView.ForwardPending = false;
+            NativeView.ForwardPending = false;
         }
 
         private void DisplayView(PageType pageType)

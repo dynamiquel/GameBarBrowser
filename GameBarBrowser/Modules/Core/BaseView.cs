@@ -16,6 +16,9 @@ namespace GameBarBrowser.Core
         public abstract event Action<BaseView, BaseViewNavigationEventArgs> NavigationStarting;
         public abstract event Action<BaseView, BaseViewNavigationEventArgs> NavigationCompleted;
 
+        public bool BackPending { get; set; }
+        public bool ForwardPending { get; set; }
+
         public abstract void GoBack();
         public abstract void GoForward();
         public abstract void Navigate(string url);

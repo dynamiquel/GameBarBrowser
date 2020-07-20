@@ -62,13 +62,15 @@ namespace GameBarBrowser.Core
         public override void GoBack()
         {
             isExistingPage = true;
-            NativeViewComponent.GoBack();
+            if (NativeViewComponent.CanGoBack)
+                NativeViewComponent.GoBack();
         }
 
         public override void GoForward()
         {
             isExistingPage = true;
-            NativeViewComponent.GoForward();
+            if (NativeViewComponent.CanGoForward)
+                NativeViewComponent.GoForward();
         }
 
         public override void Navigate(string uri)

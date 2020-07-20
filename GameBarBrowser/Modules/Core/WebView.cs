@@ -9,7 +9,7 @@ namespace GameBarBrowser.Core
     public sealed class WebView : BaseView
     {
         public override bool CanGoBack { get => WebViewComponent.CanGoBack; protected set => throw new NotImplementedException(); }
-        public override bool CanGoForward { get => WebViewComponent.CanGoBack; protected set => throw new NotImplementedException(); }
+        public override bool CanGoForward { get => WebViewComponent.CanGoForward; protected set => throw new NotImplementedException(); }
         public override string DocumentTitle { get => WebViewComponent.DocumentTitle; protected set => throw new NotImplementedException(); }
         public override string Uri { get; protected set; }
         public override bool LoadingPage { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
@@ -53,13 +53,15 @@ namespace GameBarBrowser.Core
         public override void GoBack()
         {
             isExistingPage = true;
-            WebViewComponent.GoBack();
+            if (WebViewComponent.CanGoBack)
+                WebViewComponent.GoBack();
         }
 
         public override void GoForward()
         {
             isExistingPage = true;
-            WebViewComponent.GoForward();
+            if (WebViewComponent.CanGoForward)
+                WebViewComponent.GoForward();
         }
 
         public override void Navigate(string url)
