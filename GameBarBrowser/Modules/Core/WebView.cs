@@ -39,8 +39,12 @@ namespace GameBarBrowser.Core
 
         private void HandleNavigationStarting(Windows.UI.Xaml.Controls.WebView sender, WebViewNavigationStartingEventArgs args)
         {
-            Uri = args.Uri.ToString();
-            NavigationStarting?.Invoke(this, new BaseViewNavigationEventArgs { Uri = Uri, IsNewPage = !isExistingPage });
+            var newUri = args.Uri.ToString();
+
+            bool sameUri = Uri == newUri;
+
+            Uri = newUri;
+            NavigationStarting?.Invoke(this, new BaseViewNavigationEventArgs { Uri = Uri, IsNewPage = !isExistingPage && !sameUri });
             isExistingPage = false;
         }
 

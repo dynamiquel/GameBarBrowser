@@ -141,20 +141,13 @@ namespace GameBarBrowser.Core
         {
             var tab = GetTabGroup(sender);
             tab.TabButton.PageName = "Loading...";
+            Library.LibraryHandler.History.Add(new Library.Artifact(sender.DocumentTitle, sender.Uri, DateTime.UtcNow));
 
-            if (FocusedTab == tab)
-            {
-                OnNavigationStart?.Invoke(tab, true);
-                return;
-            }
-
-            OnNavigationStart?.Invoke(tab, false);
+            OnNavigationStart?.Invoke(tab, FocusedTab == tab);
         }
 
         private void HandleNavigationComplete(TabRenderer sender)
         {
-            Library.LibraryHandler.History.Add(new Library.Artifact(sender.DocumentTitle, sender.Uri, DateTime.UtcNow));
-
             var tab = GetTabGroup(sender);
 
             tab.TabButton.PageName = tab.TabRenderer.DocumentTitle;

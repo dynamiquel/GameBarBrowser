@@ -25,8 +25,8 @@ namespace GameBarBrowser.Core
         {
             get
             {
-                /*if (timeline.Count <= 1 || timelineIndex == 0)
-                    return false;*/
+                if (timeline.Count <= 1 || timelineIndex == 0)
+                    return false;
 
                 return true;
             }
@@ -35,8 +35,8 @@ namespace GameBarBrowser.Core
         {
             get
             {
-                /*if (timeline.Count <= 1 || timelineIndex == timeline.Count - 1)
-                    return false;*/
+                if (timeline.Count <= 1 || timelineIndex == timeline.Count - 1)
+                    return false;
 
                 return true;
             }
@@ -80,13 +80,9 @@ namespace GameBarBrowser.Core
         public new void Focus(FocusState focusState)
         {
             if (PageType == PageType.Web)
-            {
                 WebView.Focus(focusState);
-            }
             else if (PageType == PageType.Native)
-            {
                 NativeView.Focus(focusState);
-            }
         }
 
         public void Query(string query)
@@ -126,23 +122,25 @@ namespace GameBarBrowser.Core
             }
         }
 
-        // TODO: Needs tweaks.
+        // Very hacky.
         public void GoBack()
         {
+            var currentPageType = PageType;
             var newPageType = timeline[timelineIndex - 1];
             var newView = GetView(newPageType);
 
-            if (newPageType != PageType && timeline.IndexOf(PageType) != timelineIndex)
+            if (newPageType != currentPageType && timeline.IndexOf(currentPageType) != timelineIndex)
             {
-                GetView(PageType).BackPending = true;
-                Debug.WriteLine($"Back pending for {GetView(PageType)}");
+                GetView(currentPageType).BackPending = true;
+                Debug.WriteLine($"Back pending for {GetView(currentPageType)}");
             }
 
             newView.ForwardPending = false;
+            timelineIndex--;
 
-            if (newView.CanGoBack && newPageType == PageType)
+            if (newView.CanGoBack && newPageType == currentPageType)
                 newView.GoBack();
-            else if (newPageType != PageType && newView.BackPending)
+            else if (newPageType != currentPageType && newView.BackPending)
             {
                 newView.GoBack();
                 newView.BackPending = false;
@@ -151,29 +149,30 @@ namespace GameBarBrowser.Core
             else
                 HandleNavigationCompleted(newView, new BaseViewNavigationEventArgs { Uri = newView.Uri });
 
-            timelineIndex--;
             Debug.WriteLine($"Index: {timelineIndex} - Timeline count: {timeline.Count}");
 
             DisplayView(newPageType);
         }
 
-        // TODO: Needs tweaks.
+        // Very hacky.
         public void GoForward()
         {
+            var currentPageType = PageType;
             var newPageType = timeline[timelineIndex + 1];
             var newView = GetView(newPageType);
 
-            if (newPageType != PageType && timeline.LastIndexOf(PageType) != timelineIndex)
+            if (newPageType != currentPageType && timeline.LastIndexOf(currentPageType) != timelineIndex)
             {
-                GetView(PageType).ForwardPending = true;
-                Debug.WriteLine($"Forward pending for {GetView(PageType)}");
+                GetView(currentPageType).ForwardPending = true;
+                Debug.WriteLine($"Forward pending for {GetView(currentPageType)}");
             }
 
             newView.BackPending = false;
+            timelineIndex++;
 
-            if (newView.CanGoForward && newPageType == PageType)
+            if (newView.CanGoForward && newPageType == currentPageType)
                 newView.GoForward();
-            else if (newPageType != PageType && newView.ForwardPending)
+            else if (newPageType != currentPageType && newView.ForwardPending)
             {
                 newView.GoForward();
                 newView.ForwardPending = false;
@@ -182,7 +181,6 @@ namespace GameBarBrowser.Core
             else
                 HandleNavigationCompleted(newView, new BaseViewNavigationEventArgs { Uri = newView.Uri });
 
-            timelineIndex++;
             Debug.WriteLine($"Index: {timelineIndex} - Timeline count: {timeline.Count}");
 
             DisplayView(newPageType);
@@ -198,12 +196,32 @@ namespace GameBarBrowser.Core
 
         private void RemoveFutureTimeline()
         {
-            var recentView = GetView(timeline[timeline.Count - 1]);
-            if (recentView.BackPending)
+            if (timeline.LastIndexOf(PageType.Native) > timelineIndex)
             {
-                recentView.GoBack();
-                recentView.BackPending = false;
-                timeline.RemoveAt(timeline.Count - 1);
+                var view = GetView(PageType.Native);
+                if (view.BackPending)
+                {
+                    view.GoBack();
+                    view.BackPending = false;
+                    Debug.WriteLine($"Back removed for {view}");
+                }
+            }
+
+            if (timeline.LastIndexOf(PageType.Web) > timelineIndex)
+            {
+                var view = GetView(PageType.Web);
+                if (view.BackPending)
+                {
+                    Debug.WriteLine(view.Uri);
+
+                    // For some reason, without this, it goes back 0 times (as expected) but with, it goes back twice. 
+                    // It should only go back once. Dunno what's wrong.
+                    view.GoBack();
+
+                    view.BackPending = false;
+                    Debug.WriteLine(view.Uri);
+                    Debug.WriteLine($"Back removed for {view}");
+                }
             }
 
             var pagesToRemove = timeline.Count - timelineIndex - 1;
