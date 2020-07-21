@@ -11,6 +11,8 @@ namespace GameBarBrowser.Settings
     /// </summary>
     public sealed partial class SettingsPage : Page
     {
+        private int searchEngine => (int)UserSettings.SearchEngine;
+
         public SettingsPage()
         {
             this.InitializeComponent();

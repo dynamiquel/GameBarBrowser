@@ -1,5 +1,7 @@
 ﻿using GameBarBrowser.Library;
+using GameBarBrowser.Settings;
 using System;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -31,14 +33,25 @@ namespace GameBarBrowser.Core
             tabHandler.OnNavigationStart += HandleNavigationStart;
             tabHandler.OnNavigationComplete += HandleNavigationComplete;
             tabHandler.OnCloseTabClick += HandleCloseTabClick;
-
-            tabHandler.AddNewTab(true).GetAwaiter().GetResult();
         }
 
         // Workaround for an async constructor.
         private async void OnStart(object sender, RoutedEventArgs e)
         {
             await LibraryHandler.LoadHistoryFromDevice();
+            await tabHandler.AddNewTab(true);
+
+            ShowNewFeaturesPage();
+        }
+
+        private void ShowNewFeaturesPage()
+        {
+            Debug.WriteLine(UserSettings.LastOpened.ToString());
+            if (UserSettings.LastOpened < new DateTime(2020, 7, 20))
+            {
+                QueryInNewTab("::/newfeatures");
+                UserSettings.LastOpened = DateTime.UtcNow;
+            }
         }
 
         private void tabScrollViewer_ScrollableWidthChanged(DependencyObject sender, DependencyProperty dp)

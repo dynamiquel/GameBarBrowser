@@ -1,5 +1,4 @@
 ﻿using System;
-using Windows.Devices.Geolocation;
 using Windows.Storage;
 
 namespace GameBarBrowser.Settings
@@ -17,8 +16,8 @@ namespace GameBarBrowser.Settings
 
                 _homeURL = value;
 
-                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-                storedSettings.Values["homePage"] = _homeURL;
+                var storedSettings = ApplicationData.Current.RoamingSettings;
+                storedSettings.Values[nameof(HomeURL)] = _homeURL;
             }
         }
 
@@ -29,7 +28,7 @@ namespace GameBarBrowser.Settings
             set
             {
                 _searchEngine = value;
-                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+                var storedSettings = ApplicationData.Current.RoamingSettings;
 
                 switch (_searchEngine)
                 {
@@ -56,7 +55,7 @@ namespace GameBarBrowser.Settings
                         break;
                 }
 
-                storedSettings.Values["searchEngine"] = _searchEngine.ToString();
+                storedSettings.Values[nameof(SearchEngine)] = _searchEngine.ToString();
             }
         }
         public static string SearchEngineURL { get; private set; }
@@ -69,8 +68,8 @@ namespace GameBarBrowser.Settings
             {
                 _switchToNewTab = value;
 
-                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-                storedSettings.Values["switchToNewTab"] = value;
+                var storedSettings = ApplicationData.Current.RoamingSettings;
+                storedSettings.Values[nameof(SwitchToNewTab)] = value;
             }
         }
 
@@ -82,8 +81,8 @@ namespace GameBarBrowser.Settings
             {
                 _recordHistory = value;
 
-                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-                storedSettings.Values["recordHistory"] = value;
+                var storedSettings = ApplicationData.Current.RoamingSettings;
+                storedSettings.Values[nameof(RecordHistory)] = value;
             }
         }
 
@@ -95,22 +94,35 @@ namespace GameBarBrowser.Settings
             {
                 _ignoreDuplicatedHistory = value;
 
-                var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
-                storedSettings.Values["ignoreDuplicatedHistory"] = value;
+                var storedSettings = ApplicationData.Current.RoamingSettings;
+                storedSettings.Values[nameof(IgnoreDuplicatedHistory)] = value;
+            }
+        }
+
+        private static DateTime _lastOpened;
+        public static DateTime LastOpened
+        {
+            get => _lastOpened;
+            set
+            {
+                _lastOpened = value;
+
+                var storedSettings = ApplicationData.Current.RoamingSettings;
+                storedSettings.Values[nameof(LastOpened)] = value.Ticks;
             }
         }
 
         public static void LoadUserSettings()
         {
-            var storedSettings = Windows.Storage.ApplicationData.Current.RoamingSettings;
+            var storedSettings = ApplicationData.Current.RoamingSettings;
 
             CreateUserSettings(storedSettings);
 
-            HomeURL = storedSettings.Values["homePage"] as string;
+            HomeURL = storedSettings.Values[nameof(HomeURL)] as string;
 
             try
             {
-                SearchEngine = (SearchEngine)Enum.Parse(typeof(SearchEngine), storedSettings.Values["searchEngine"] as string);
+                SearchEngine = (SearchEngine)Enum.Parse(typeof(SearchEngine), storedSettings.Values[nameof(SearchEngine)] as string);
             }
             catch (Exception e)
             {
@@ -119,7 +131,7 @@ namespace GameBarBrowser.Settings
 
             try
             {
-                SwitchToNewTab = bool.Parse(storedSettings.Values["switchToNewTab"] as string);
+                SwitchToNewTab = bool.Parse(storedSettings.Values[nameof(SwitchToNewTab)] as string);
             }
             catch (Exception e)
             {
@@ -128,7 +140,7 @@ namespace GameBarBrowser.Settings
 
             try
             {
-                RecordHistory = bool.Parse(storedSettings.Values["recordHistory"] as string);
+                RecordHistory = bool.Parse(storedSettings.Values[nameof(RecordHistory)] as string);
             }
             catch (Exception e)
             {
@@ -137,30 +149,42 @@ namespace GameBarBrowser.Settings
 
             try
             {
-                IgnoreDuplicatedHistory = bool.Parse(storedSettings.Values["ignoreDuplicatedHistory"] as string);
+                IgnoreDuplicatedHistory = bool.Parse(storedSettings.Values[nameof(IgnoreDuplicatedHistory)] as string);
             }
             catch (Exception e)
             {
                 IgnoreDuplicatedHistory = true;
             }
+
+            try
+            {
+                LastOpened = new DateTime((long)storedSettings.Values[nameof(LastOpened)]);
+            }
+            catch (Exception e)
+            {
+                LastOpened = DateTime.UtcNow;
+            }
         }
 
-        private static void CreateUserSettings(Windows.Storage.ApplicationDataContainer storedSettings)
+        private static void CreateUserSettings(ApplicationDataContainer storedSettings)
         {
-            if (!storedSettings.Values.ContainsKey("homePage") || string.IsNullOrWhiteSpace(storedSettings.Values["homePage"].ToString()))
-                storedSettings.Values["homePage"] = "https://www.bing.com/";
+            if (!storedSettings.Values.ContainsKey(nameof(HomeURL)) || string.IsNullOrWhiteSpace(storedSettings.Values[nameof(HomeURL)].ToString()))
+                storedSettings.Values[nameof(HomeURL)] = "https://www.bing.com/";
 
-            if (!storedSettings.Values.ContainsKey("searchEngine"))
-                storedSettings.Values["searchEngine"] = SearchEngine.Bing.ToString();
+            if (!storedSettings.Values.ContainsKey(nameof(SearchEngine)))
+                storedSettings.Values[nameof(SearchEngine)] = SearchEngine.Bing.ToString();
 
-            if (!storedSettings.Values.ContainsKey("switchToNewTab"))
-                storedSettings.Values["switchToNewTab"] = true;
+            if (!storedSettings.Values.ContainsKey(nameof(SwitchToNewTab)))
+                storedSettings.Values[nameof(SwitchToNewTab)] = true;
 
-            if (!storedSettings.Values.ContainsKey("recordHistory"))
-                storedSettings.Values["recordHistory"] = true;
+            if (!storedSettings.Values.ContainsKey(nameof(RecordHistory)))
+                storedSettings.Values[nameof(RecordHistory)] = true;
 
-            if (!storedSettings.Values.ContainsKey("ignoreDuplicatedHistory"))
-                storedSettings.Values["ignoreDuplicatedHistory"] = true;
+            if (!storedSettings.Values.ContainsKey(nameof(IgnoreDuplicatedHistory)))
+                storedSettings.Values[nameof(IgnoreDuplicatedHistory)] = true;
+
+            if (!storedSettings.Values.ContainsKey(nameof(LastOpened)))
+                storedSettings.Values[nameof(LastOpened)] = DateTime.UtcNow.Ticks;
         }
     }
 
