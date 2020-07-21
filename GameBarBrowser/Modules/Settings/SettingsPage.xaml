@@ -1,0 +1,87 @@
+﻿<Page
+    x:Class="GameBarBrowser.Settings.SettingsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GameBarBrowser.Settings"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" FontWeight="SemiBold">
+
+    <ScrollViewer>
+        <StackPanel Orientation="Vertical" 
+                    HorizontalAlignment="Left" 
+                    VerticalAlignment="Top" 
+                    Width="300" 
+                    Padding="16">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                <TextBlock Text="Settings" 
+                           VerticalAlignment="Center" 
+                           Margin="0,0,0,0" 
+                           FontSize="24" FontWeight="Bold"/>
+            </StackPanel>
+
+            <TextBlock Text="BASIC" Margin="0,16,0,8" FontSize="16" Foreground="Gray"/>
+
+            <TextBlock Text="Homepage" Margin="0,0,0,8"/>
+            <TextBox Name="homePageURLTextBox" 
+                     Text="https://www.bing.com"
+                     IsSpellCheckEnabled="False"
+                     TextChanged="homePageURLTextBox_TextChanged"/>
+
+            <TextBlock Text="Search Engine" Margin="0,16,0,8"/>
+            <ComboBox Name="searchEngineComboBox" 
+                      SelectedIndex="{x:Bind searchEngine}" 
+                      SelectionChanged="searchEngineComboBox_SelectionChanged" 
+                      Loaded="searchEngineComboBox_Loaded"
+                      HorizontalAlignment="Stretch">
+                <ComboBox.Items>
+                    <ComboBoxItem Content="Bing"/>
+                    <ComboBoxItem Content="Google"/>
+                    <ComboBoxItem Content="DuckDuckGo"/>
+                    <ComboBoxItem Content="YouTube"/>
+                    <ComboBoxItem Content="Twitch"/>
+                    <ComboBoxItem Content="Baidu"/>
+                </ComboBox.Items>
+            </ComboBox>
+
+            <CheckBox Name="switchToNewTabsCheckBox"
+                      Margin="0,16,0,8"
+                      Click="switchToNewTabsCheckBox_Click"
+                      Content="Auto-switch to new tabs"
+                      FlowDirection="RightToLeft"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Right"
+                      ToolTipService.ToolTip="Enabled: When a new tab is created, the browser will automatically switch to it."/>
+
+            <CheckBox Name="recordHistory"
+                      Margin="0,0,0,8"
+                      Click="recordHistory_Click"
+                      Content="Record history"
+                      FlowDirection="RightToLeft"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Right"
+                      ToolTipService.ToolTip="Enabled: The webpages you visit are saved on your device."/>
+            <CheckBox Name="ignoreDuplicatedHistory"
+                      Margin="0,0,0,8"
+                      Click="ignoreDuplicatedHistory_Click"
+                      Content="Ignore duplicated history entries"
+                      FlowDirection="RightToLeft"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Right"
+                      ToolTipService.ToolTip="Enabled: When visiting a webpage you have visited before, the previous history entry is updated instead of creating a new one."/>
+
+
+            <TextBlock Text="ABOUT" 
+                       Margin="0,28,0,8" 
+                       FontSize="16" 
+                       Foreground="Gray"/>
+            <TextBlock TextWrapping="Wrap">
+                Browser for Xbox Game Bar<LineBreak></LineBreak><LineBreak></LineBreak>
+                Developed by Liam Hall<LineBreak></LineBreak>
+                Licenced under <Hyperlink NavigateUri="https://unlicense.org">The Unlicense</Hyperlink><LineBreak></LineBreak><LineBreak></LineBreak>
+                <Hyperlink NavigateUri="https://github.com/dynamiquel/Game-Bar-Browser">Report issues or contribute to development.</Hyperlink>
+            </TextBlock>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

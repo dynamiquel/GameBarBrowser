@@ -1,15 +1,16 @@
 ﻿using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
-namespace GameBarBrowser
+namespace GameBarBrowser.Core
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class TabBar : Page
+    public sealed partial class TabButton : Page
     {
         public bool Active
         {
@@ -27,14 +28,27 @@ namespace GameBarBrowser
             }
         }
 
-        public event Action<TabBar> TabCloseClick;
-        public event Action<TabBar> TabOpenClick;
+        public event Action<TabButton> TabCloseClick;
+        public event Action<TabButton> TabOpenClick;
 
-        public Image Favicon => favicon;
-
-        public TabBar()
+        public TabButton()
         {
             this.InitializeComponent();
+        }
+
+        public void SetFaviconSource(ImageSource source)
+        {
+            nativeFavicon.Visibility = Visibility.Collapsed;
+            favicon.Source = source;
+            favicon.Visibility = Visibility.Visible;
+        }
+
+        public void SetNativeFaviconSource(FontIcon source)
+        {
+            favicon.Visibility = Visibility.Collapsed;
+            nativeFavicon.FontFamily = source.FontFamily;
+            nativeFavicon.Glyph = source.Glyph;
+            nativeFavicon.Visibility = Visibility.Visible;
         }
 
         private void tabButton_Click(object sender, RoutedEventArgs e)

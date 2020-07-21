@@ -5,6 +5,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Microsoft.Gaming.XboxGameBar;
+using System.Collections.Generic;
+using GameBarBrowser.Core;
+using System.Diagnostics;
+using GameBarBrowser.Pages;
+using System.Linq;
 
 /// <summary>
 /// Known issues during development:
@@ -21,8 +26,11 @@ namespace GameBarBrowser
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
-    sealed partial class App : Application
+    public sealed partial class App : Application
     {
+        private static List<BrowserWidget> BrowserWindows = new List<BrowserWidget>();
+
+
         private XboxGameBarWidget browserWidget = null;
         // Not currently used.
         private XboxGameBarWidget settingsWidget = null;
@@ -36,7 +44,68 @@ namespace GameBarBrowser
             this.InitializeComponent();
             this.Suspending += OnSuspending;
 
-            UserSettings.LoadUserSettings();
+            Settings.UserSettings.LoadUserSettings();
+        }
+
+        public static void Query(string query, int browserWindowIndex = 0)
+        {
+            Debug.WriteLine(BrowserWindows.Count);
+            if (BrowserWindows.Count > 0 && BrowserWindows.Count > browserWindowIndex)
+                BrowserWindows[browserWindowIndex].Query(query);
+        }
+
+        public static void QueryInNewTab(string query, int browserWindowIndex = 0)
+        {
+            Debug.WriteLine(BrowserWindows.Count);
+            if (BrowserWindows.Count > 0 && BrowserWindows.Count > browserWindowIndex)
+                BrowserWindows[browserWindowIndex].QueryInNewTab(query);
+        }
+
+        public static void AddBrowser(BrowserWidget browserWindow)
+        {
+            if (!BrowserWindows.Contains(browserWindow))
+                BrowserWindows.Add(browserWindow);
+        }
+
+        public static async void QueryInDefaultBrowser(string uriString)
+        {
+            if (uriString.StartsWith(NativeView.UriPrefix))
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open page",
+                    Content = "This page cannot be open in your default browser.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+                return;
+            }
+
+            // The URI to launch
+            var uri = new Uri(uriString);
+
+            if (!uri.IsAbsoluteUri)
+                return;
+
+            // Launch the URI
+            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+
+            if (success)
+            {
+                // URI launched
+            }
+            else
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open browser",
+                    Content = "Your default browser could not be opened.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+            }
         }
 
         protected override void OnActivated(IActivatedEventArgs args)
@@ -90,7 +159,10 @@ namespace GameBarBrowser
                             widgetArgs,
                             Window.Current.CoreWindow,
                             rootFrame);
-                        rootFrame.Navigate(typeof(BrowserWidget), browserWidget);
+
+                        rootFrame.Navigated += RootFrame_Navigated;
+
+                        rootFrame.Navigate(typeof(Core.BrowserWidget), browserWidget);                       
 
                         Window.Current.Closed += BrowserWidgetWindow_Closed;
                     }
@@ -101,7 +173,7 @@ namespace GameBarBrowser
                             widgetArgs,
                             Window.Current.CoreWindow,
                             rootFrame);
-                        rootFrame.Navigate(typeof(SettingsWidget));
+                        rootFrame.Navigate(typeof(Settings.SettingsPage));
 
                         Window.Current.Closed += SettingsWidgetWindow_Closed;
                     }
@@ -113,6 +185,11 @@ namespace GameBarBrowser
                     // You can perform whatever behavior you need based on the URI payload.
                 }
             }
+        }
+
+        private void RootFrame_Navigated(object sender, NavigationEventArgs e)
+        {
+            (sender as Frame).Navigated -= RootFrame_Navigated;
         }
 
         private void BrowserWidgetWindow_Closed(object sender, Windows.UI.Core.CoreWindowEventArgs e)
@@ -144,6 +221,7 @@ namespace GameBarBrowser
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
+                rootFrame.Navigated += RootFrame_Navigated;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {

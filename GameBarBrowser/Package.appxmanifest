@@ -10,7 +10,7 @@
   <Identity
     Name="61449LiamHall.GameBarBrowser"
     Publisher="CN=555D21B8-0A4C-477E-8B9B-BEE2FEE87CE2"
-    Version="1.0.0.0" />
+    Version="2.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="1b6e4fd3-3294-4366-98d4-a25d2cb89488" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -49,6 +49,7 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
         <uap:InitialRotationPreference>
           <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
+        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>
       </uap:VisualElements>
       <Extensions>
         
@@ -69,7 +70,7 @@
                     <Height>720</Height>
                     <Width>1280</Width>
                     <MinHeight>150</MinHeight>
-                    <MinWidth>600</MinWidth>
+                    <MinWidth>200</MinWidth>
                     <MaxHeight>Infinite</MaxHeight>
                     <MaxWidth>Infinite</MaxWidth>
                   </Size>
