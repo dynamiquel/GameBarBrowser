@@ -16,12 +16,20 @@
                     VerticalAlignment="Top" 
                     Padding="16">
 
-            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+            <Grid Margin="0,0,0,16">
                 <TextBlock Text="Library" 
                            VerticalAlignment="Center" 
                            Margin="0,0,0,0" 
                            FontSize="24" FontWeight="Bold"/>
-            </StackPanel>
+                <Button Margin="8,0,0,0"
+                        ToolTipService.ToolTip="Refresh"
+                        Name="refreshButton"
+                        Click="refreshButton_Click"
+                        HorizontalAlignment="Right"
+                        HorizontalContentAlignment="Right">
+                    <SymbolIcon Symbol="Refresh"/>
+                </Button>
+            </Grid>
 
             <StackPanel Orientation="Horizontal"
                         Margin="0,16,0,8">

@@ -360,5 +360,11 @@ namespace GameBarBrowser.Library
             var artifact = GetSelectedArtifact();
             CopyUriToClipboard(artifact);
         }
+
+        private async void refreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshBookmarks();
+            RefreshHistory();
+        }
     }
 }

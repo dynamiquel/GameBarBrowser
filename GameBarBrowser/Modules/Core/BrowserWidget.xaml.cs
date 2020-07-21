@@ -112,7 +112,7 @@ namespace GameBarBrowser.Core
                 AB_backButton.IsEnabled = tab.TabRenderer.CanGoBack;
                 AB_forwardButton.IsEnabled = tab.TabRenderer.CanGoForward;
                 AB_searchBox.Text = tab.TabRenderer.Uri;
-                UpdateRefreshButton(true);
+                UpdateRefreshButton(true, tab.TabRenderer);
             }
         }
 
@@ -124,7 +124,7 @@ namespace GameBarBrowser.Core
                 AB_backButton.IsEnabled = tab.TabRenderer.CanGoBack;
                 AB_forwardButton.IsEnabled = tab.TabRenderer.CanGoForward;
                 AB_searchBox.Text = tab.TabRenderer.Uri;
-                UpdateRefreshButton(false);
+                UpdateRefreshButton(false, tab.TabRenderer);
             }
         }
 
@@ -134,7 +134,7 @@ namespace GameBarBrowser.Core
             pageViewer.Children.Remove(tab.TabRenderer.Frame);
         }
 
-        private void UpdateRefreshButton(bool isLoading)
+        private void UpdateRefreshButton(bool isLoading, TabRenderer tabRenderer)
         {
             if (isLoading)
             {
@@ -148,6 +148,9 @@ namespace GameBarBrowser.Core
                 var symbol = new SymbolIcon { Symbol = Symbol.Refresh };
                 AB_refreshButton.Icon = symbol;
             }
+
+            // Disable the refresh button if it's a Native page.
+            AB_refreshButton.IsEnabled = tabRenderer.PageType != PageType.Native;
         }
 
         #region Control Events
