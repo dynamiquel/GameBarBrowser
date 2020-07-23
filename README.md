@@ -1,4 +1,7 @@
 # Game-Bar-Browser
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ba0377d699a4a20a53829efe3e5d553)](https://app.codacy.com/manual/dynamiquel/Game-Bar-Browser?utm_source=github.com&utm_medium=referral&utm_content=dynamiquel/Game-Bar-Browser&utm_campaign=Badge_Grade_Dashboard)
+
 A basic web browser made for the Xbox Game Bar on Windows 10.
 
 This web browser is really basic but one didn't exist for the Xbox Game Bar at the time, so it's better than nothing. I expect a superior web browser to appear in the coming months but this repo is open to suggestions.
