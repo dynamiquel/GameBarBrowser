@@ -10,7 +10,21 @@ This web browser is really basic but one didn't exist for the Xbox Game Bar at t
 [Click here to view all features](https://github.com/dynamiquel/Game-Bar-Browser/blob/master/RELEASES.md)
 
 ## Download
-[Click here to download **Browser for Xbox Game Bar**](https://www.microsoft.com/en-gb/p/browser-for-xbox-game-bar/9nk1cnb0nccx?irgwc=1&OCID=AID2000142_aff_7593_159229&tduid=%28ir__ywh0qxotpckftjqnxka03fe3c22xnsta9kwxk6l900%29%287593%29%28159229%29%28%29%28UUwpUdUnU77533YYmYb%29&irclickid=_ywh0qxotpckftjqnxka03fe3c22xnsta9kwxk6l900&activetab=pivot:overviewtab) from the Microsoft Store.
+[Click here to download the latest version of **Browser for Game Bar**](https://www.microsoft.com/en-gb/p/browser-for-xbox-game-bar/9nk1cnb0nccx?irgwc=1&OCID=AID2000142_aff_7593_159229&tduid=%28ir__ywh0qxotpckftjqnxka03fe3c22xnsta9kwxk6l900%29%287593%29%28159229%29%28%29%28UUwpUdUnU77533YYmYb%29&irclickid=_ywh0qxotpckftjqnxka03fe3c22xnsta9kwxk6l900&activetab=pivot:overviewtab) from the Microsoft Store.
+
+## Installing older versions
+To install an older version of Game Bar Browser, you must [**Sideload**](https://docs.microsoft.com/en-us/previous-versions/windows/apps/bg126232(v=win.10)?redirectedfrom=MSDN) it.
+
+1. Install the desired version
+2. Right click on MSIX file
+3. Click Properties
+4. Click Digital Signatures
+5. Select Signature from the list
+6. Click Details
+7. Click View Certificate
+8. Click Install Certificate
+9. Open the MSIX file
+
 
 ## Developers
 The app uses Microsoft's EdgeHTML WebView, and so inherits limitations and bugs from it. I also wouldn't say the code is worthy to fork, but do as you will.
