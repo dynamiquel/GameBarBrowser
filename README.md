@@ -15,7 +15,7 @@ This web browser is really basic but one didn't exist for the Xbox Game Bar at t
 ## Installing older versions
 To install an older version of Game Bar Browser, you must [**Sideload**](https://docs.microsoft.com/en-us/previous-versions/windows/apps/bg126232(v=win.10)?redirectedfrom=MSDN) it.
 
-1. Install the desired version
+1. Download the desired version from [releases](https://github.com/dynamiquel/Game-Bar-Browser/releases/)
 2. Right click on MSIX file
 3. Click Properties
 4. Click Digital Signatures
