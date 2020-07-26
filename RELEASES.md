@@ -1,4 +1,7 @@
 # Releases
+## v2.0.1
+- Fixed an issue that prevented typing in the Widget when a background app was selected.
+
 ## v2.0
 - Can now create and manage bookmarks/favourites.
 - History is recordered and can be managed.
