@@ -1,6 +1,11 @@
-# Game-Bar-Browser
+<h1 align="center">
+    <img src="https://store-images.s-microsoft.com/image/apps.9803.13665982798840789.e082f07b-1ea3-4fde-b043-8dcc4e3a08c6.11ecdb51-2d2d-40f6-bed7-e3b959340fcc?mode=scale&q=90&h=300&w=300" width="50"/>
+  <br>Game-Bar-Browser
+</h1>
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0ba0377d699a4a20a53829efe3e5d553)](https://app.codacy.com/manual/dynamiquel/Game-Bar-Browser?utm_source=github.com&utm_medium=referral&utm_content=dynamiquel/Game-Bar-Browser&utm_campaign=Badge_Grade_Dashboard)
+
+<img src="https://store-images.s-microsoft.com/image/apps.31513.13665982798840789.ff7405c8-a553-4c46-885d-f4e1eb46b3e1.f3e3dad5-c6a3-4648-8a39-2935526c0e19?w=1399&h=787&q=90&format=jpg" width="800"/>
 
 A basic web browser made for the Xbox Game Bar on Windows 10.
 
