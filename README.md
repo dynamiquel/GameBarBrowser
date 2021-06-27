@@ -11,6 +11,9 @@ A basic web browser made for the Xbox Game Bar on Windows 10.
 
 This web browser is really basic but one didn't exist for the Xbox Game Bar at the time, so it's better than nothing. I expect a superior web browser to appear in the coming months but this repo is open to suggestions.
 
+Due to **Xbox Game Bar** only supporting an outdated **Edge WebView**, this browser will not run smoothly on many modern sites that rely on modern technologies.
+Therefore, I find it kind of pointless to update this app until Xbox Game Bar supports **WinUI 3**.
+
 ## Current features
 [Click here to view all features](https://github.com/dynamiquel/Game-Bar-Browser/blob/master/RELEASES.md)
 
