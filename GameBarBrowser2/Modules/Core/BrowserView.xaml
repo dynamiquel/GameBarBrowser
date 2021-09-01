@@ -1,0 +1,157 @@
+﻿<Page
+    x:Class="GameBarBrowser2.Modules.Core.BrowserView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GameBarBrowser2.Modules.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:w="using:Microsoft.UI.Xaml.Controls"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid x:Name="BackgroundGrid"
+          PointerEntered="OnPointerEntered"
+          PointerExited="OnPointerExited">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid x:Name="CommandBar"
+              Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <CommandBar Grid.Column="0" 
+                            HorizontalAlignment="Left"
+                            OverflowButtonVisibility="Collapsed">
+                <AppBarButton x:Name="BackButton" 
+                                  Icon="Back" 
+                                  Label="Back"
+                                  ToolTipService.ToolTip="Go backwards one page"
+                                  Click="BackButton_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="Left"/>
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton x:Name="ForwardButton" 
+                                  Icon="Forward" 
+                                  Label="Forward"
+                                  ToolTipService.ToolTip="Go forwards one page"
+                                  Click="ForwardButton_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="Right"/>
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton x:Name="RefreshButton" 
+                                  Icon="Refresh" 
+                                  Label="Refresh"
+                                  ToolTipService.ToolTip="Refresh the current page"
+                                  Click="RefreshButton_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="None" Key="F5"/>
+                        <KeyboardAccelerator Modifiers="Control" Key="R"/>
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+                <AppBarButton x:Name="HomeButton" 
+                                  Icon="Home" 
+                                  Label="Home"
+                                  ToolTipService.ToolTip="Go Home"
+                                  Click="HomeButton_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control,Shift" Key="H"/>
+                        <KeyboardAccelerator Modifiers="Control" Key="Home"/>
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+            </CommandBar>
+
+            <Rectangle Grid.Column="1"
+                       HorizontalAlignment="Stretch"
+                       Fill="{ThemeResource AppBarBorderThemeBrush}"/>
+            <TextBox
+                         Grid.Column="1" 
+                         x:Name="SearchBox"
+                         VerticalAlignment="Stretch"
+                         FontSize="16"
+                         PlaceholderText="Search with a search engine or enter address"
+                         IsSpellCheckEnabled="False"
+                         KeyDown="SearchBox_KeyDown"
+                         GotFocus="SearchBox_GotFocus"/>
+
+            <CommandBar Grid.Column="2" 
+                            HorizontalAlignment="Right"
+                            OverflowButtonVisibility="Auto">
+                <AppBarButton x:Name="SearchButton"
+                                  Icon="Zoom"
+                                  Label="Search"
+                                  ToolTipService.ToolTip="Search"
+                                  Click="SearchButton_Click"/>
+                <AppBarButton x:Name="LibraryButton"
+                                  Icon="Library"
+                                  Label="Library"
+                                  ToolTipService.ToolTip="View your favourites and history"
+                                  Click="LibraryButton_Click">
+                    <AppBarButton.KeyboardAccelerators>
+                        <KeyboardAccelerator Modifiers="Control" Key="L"/>
+                        <KeyboardAccelerator Modifiers="Control" Key="H"/>
+                    </AppBarButton.KeyboardAccelerators>
+                </AppBarButton>
+
+                <CommandBar.SecondaryCommands>
+                    <AppBarButton x:Name="DefaultBrowserButton"
+                                      Icon="World"
+                                      Label="Open page in default browser"
+                                      ToolTipService.ToolTip="Open this page in your default browser"
+                                      Click="DefaultBrowserButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="B"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                    <AppBarButton x:Name="BookmarkButton"
+                                      Icon="Favorite"
+                                      Label="Add page to favourites"
+                                      ToolTipService.ToolTip="Add this page to favourites"
+                                      Click="BookmarkButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control" Key="D"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                    <AppBarButton x:Name="FullScreenButton"
+                                      Icon="FullScreen"
+                                      Label="Fullscreen"
+                                      ToolTipService.ToolTip="Toggle fullscreen mode"
+                                      Click="FullScreenButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="None" Key="F11"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                    <AppBarButton x:Name="SettingsButton"
+                                      Icon="Setting"
+                                      Label="Settings"                                 
+                                      ToolTipService.ToolTip="Change browser settings"
+                                      Click="SettingsButton_Click">
+                        <AppBarButton.KeyboardAccelerators>
+                            <KeyboardAccelerator Modifiers="Control,Shift" Key="S"/>
+                        </AppBarButton.KeyboardAccelerators>
+                    </AppBarButton>
+                </CommandBar.SecondaryCommands>
+            </CommandBar>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <!-- for some bizare reason, without this, tabs don't render WebView or WebView2 for some reason. 
+                 maybe the Tab just don't auto-stretch the vertical alignment or something? -->
+            <Image Height="9999" Width="9999"/>
+            <w:WebView2 x:Name="WebViewControl"
+                        Source="https://bing.com"
+                        NavigationStarting="WebView_NavigationStarting"
+                        NavigationCompleted="WebView_NavigationCompleted"
+                        CoreProcessFailed="WebView_CoreProcessFailed"
+                        WebMessageReceived="WebView_WebMessageReceived"
+                        CoreWebView2Initialized="WebView_Initialized"/>
+        </Grid>
+    </Grid>
+</Page>

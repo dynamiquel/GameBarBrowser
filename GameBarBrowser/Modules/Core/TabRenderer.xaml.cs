@@ -116,7 +116,7 @@ namespace GameBarBrowser.Core
             if (PageType == PageType.Web)
             {
                 if (LoadingPage)
-                    WebView.WebViewComponent.Stop();
+                    WebView.WebViewComponent.CoreWebView2?.Stop();
                 else
                     WebView.Refresh();
             }

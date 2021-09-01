@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
+using System;
 using System.Text.RegularExpressions;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -10,7 +12,7 @@ namespace GameBarBrowser.Core
     {
         public override bool CanGoBack { get => WebViewComponent.CanGoBack; protected set => throw new NotImplementedException(); }
         public override bool CanGoForward { get => WebViewComponent.CanGoForward; protected set => throw new NotImplementedException(); }
-        public override string DocumentTitle { get => WebViewComponent.DocumentTitle; protected set => throw new NotImplementedException(); }
+        public override string DocumentTitle { get => WebViewComponent.CoreWebView2.DocumentTitle; protected set => throw new NotImplementedException(); }
         public override string Uri { get; protected set; }
         public override bool LoadingPage { get => throw new NotImplementedException(); protected set => throw new NotImplementedException(); }
         public override Visibility Visibility { get => WebViewComponent.Visibility; set => WebViewComponent.Visibility = value; }
@@ -18,26 +20,26 @@ namespace GameBarBrowser.Core
         public override event Action<BaseView, BaseViewNavigationEventArgs> NavigationStarting;
         public override event Action<BaseView, BaseViewNavigationEventArgs> NavigationCompleted;
 
-        public Windows.UI.Xaml.Controls.WebView WebViewComponent { get; private set; }
+        public WebView2 WebViewComponent { get; private set; }
 
         private bool isExistingPage;
 
         public WebView()
         {
-            WebViewComponent = new Windows.UI.Xaml.Controls.WebView(WebViewExecutionMode.SameThread);
+            WebViewComponent = new WebView2();
             Grid.SetRow(WebViewComponent, 0);
 
             WebViewComponent.NavigationStarting += HandleNavigationStarting;
             WebViewComponent.NavigationCompleted += HandleNavigationCompleted;
         }
 
-        private void HandleNavigationCompleted(Windows.UI.Xaml.Controls.WebView sender, WebViewNavigationCompletedEventArgs args)
+        private void HandleNavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
         {
-            Uri = args.Uri.ToString();
+            Uri = sender.Source.ToString();
             NavigationCompleted?.Invoke(this, new BaseViewNavigationEventArgs { Uri = Uri });
         }
 
-        private void HandleNavigationStarting(Windows.UI.Xaml.Controls.WebView sender, WebViewNavigationStartingEventArgs args)
+        private void HandleNavigationStarting(WebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
             var newUri = args.Uri.ToString();
 
@@ -51,7 +53,7 @@ namespace GameBarBrowser.Core
         public override async void Focus(FocusState focusState)
         {
             WebViewComponent.Focus(focusState);
-            await WebViewComponent.InvokeScriptAsync(@"eval", new string[] { "document.focus()" });
+            await WebViewComponent.ExecuteScriptAsync("document.focus()");
         }
 
         public override void GoBack()
@@ -68,9 +70,9 @@ namespace GameBarBrowser.Core
                 WebViewComponent.GoForward();
         }
 
-        public override void Navigate(string url)
+        public override async void Navigate(string url)
         {
-            WebViewComponent.Navigate(GetUri(url));
+            WebViewComponent.CoreWebView2?.Navigate(GetUri(url).ToString());
         }
 
         private static Uri GetUri(string query)
@@ -92,7 +94,7 @@ namespace GameBarBrowser.Core
 
         public override void Refresh()
         {
-            WebViewComponent.Refresh();
+            WebViewComponent.Reload();
         }
     }
 }

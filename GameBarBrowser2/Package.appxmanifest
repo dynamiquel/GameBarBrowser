@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap uap3 mp">
 
   <Identity
-    Name="61449LiamHall.GameBarBrowser"
-    Publisher="CN=555D21B8-0A4C-477E-8B9B-BEE2FEE87CE2"
-    Version="2.0.1.0" />
+    Name="2ea47726-521a-4f31-b82a-cf75d01aab10"
+    Publisher="CN=Liamk"
+    Version="2.1.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="1b6e4fd3-3294-4366-98d4-a25d2cb89488" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="2ea47726-521a-4f31-b82a-cf75d01aab10" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Game Bar Browser</DisplayName>
-    <PublisherDisplayName>Liam Hall</PublisherDisplayName>
+    <DisplayName>GameBarBrowser2</DisplayName>
+    <PublisherDisplayName>Liamk</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -29,48 +29,40 @@
   </Resources>
 
   <Applications>
-    <Application Id="App"
+    <Application Id="LiamkGBB"
       Executable="$targetnametoken$.exe"
-      EntryPoint="GameBarBrowser.App">
+      EntryPoint="GameBarBrowser2.App">
+       
       <uap:VisualElements
         DisplayName="Game Bar Browser"
         Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square4x44Logo.png"
-        Description="GameBarBrowser"
+        Square44x44Logo="Assets\Square44x44Logo.png"
+        Description="GameBarBrowser2"
         BackgroundColor="transparent"
-        AppListEntry="none">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" ShortName="Browser" Square71x71Logo="Assets\SmallTile.png" Square310x310Logo="Assets\LargeTile.png">
-          <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo"/>
-            <uap:ShowOn Tile="wide310x150Logo"/>
-            <uap:ShowOn Tile="square310x310Logo"/>
-          </uap:ShowNameOnTiles>
-        </uap:DefaultTile >
+        AppListEntry="default">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
-        <uap:InitialRotationPreference>
-          <uap:Rotation Preference="landscape"/></uap:InitialRotationPreference>
-        <uap:LockScreen BadgeLogo="Assets\BadgeLogo.png" Notification="badge"/>
       </uap:VisualElements>
+
       <Extensions>
-        
-        <!-- Main browser window -->
         <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="microsoft.gameBarUIExtension"
-                             Id="BrowserWidget"
+                             Id="GameBarBrowser"
                              DisplayName="Browser"
-                             Description="Browse the web."
-                             PublicFolder="PublicAssets">
+                             Description="Surf the web."
+                             PublicFolder="GameBar">
             <uap3:Properties>
               <GameBarWidget Type="Standard">
                 <HomeMenuVisible>true</HomeMenuVisible>
                 <PinningSupported>true</PinningSupported>
                 <ActivateAfterInstalled>true</ActivateAfterInstalled>
-                <Window>
+                <SettingsSupported AppExtensionId="GameBarBrowserSettings"/>
+                <Window>    
                   <Size>
                     <Height>720</Height>
                     <Width>1280</Width>
-                    <MinHeight>150</MinHeight>
-                    <MinWidth>200</MinWidth>
+                    <MinHeight>4</MinHeight>
+                    <MinWidth>4</MinWidth>
                     <MaxHeight>Infinite</MaxHeight>
                     <MaxWidth>Infinite</MaxWidth>
                   </Size>
@@ -83,24 +75,54 @@
             </uap3:Properties>
           </uap3:AppExtension>
         </uap3:Extension>
-
-        <!-- Settings window -->
+        
         <uap3:Extension Category="windows.appExtension">
           <uap3:AppExtension Name="microsoft.gameBarUIExtension"
-                             Id="SettingsWidget"
-                             DisplayName="Settings"
-                             Description="Settings for Browser for Xbox Game Bar"
-                             PublicFolder="PublicAssets">
+                         Id="GameBarBrowserSettings"
+                         DisplayName="Browser - Settings"
+                         Description="Configure your Browser."
+                         PublicFolder="GameBar">
             <uap3:Properties>
+              <!--When creating your settings widget, be sure to set its type to "Settings" -->
               <GameBarWidget Type="Settings">
                 <Window>
                   <Size>
                     <Height>300</Height>
                     <Width>300</Width>
+                    <MinHeight>100</MinHeight>
+                    <MinWidth>100</MinWidth>
+                    <MaxHeight>Infinite</MaxHeight>
+                    <MaxWidth>Infinite</MaxWidth>
+                  </Size>
+                </Window>
+              </GameBarWidget>
+            </uap3:Properties>
+          </uap3:AppExtension>
+        </uap3:Extension>
+
+        <uap3:Extension Category="windows.appExtension">
+          <uap3:AppExtension Name="microsoft.gameBarUIExtension"
+                             Id="GameBarBrowserLibrary"
+                             DisplayName="Browser - Library"
+                             Description="View your favourites and history."
+                             PublicFolder="GameBar">
+            <uap3:Properties>
+              <GameBarWidget Type="Standard">
+                <HomeMenuVisible>false</HomeMenuVisible>
+                <PinningSupported>false</PinningSupported>
+                <ActivateAfterInstalled>false</ActivateAfterInstalled>
+                <Window>
+                  <Size>
+                    <Height>540</Height>
+                    <Width>960</Width>
+                    <MinHeight>100</MinHeight>
+                    <MinWidth>100</MinWidth>
+                    <MaxHeight>Infinite</MaxHeight>
+                    <MaxWidth>Infinite</MaxWidth>
                   </Size>
                   <ResizeSupported>
-                    <Horizontal>false</Horizontal>
-                    <Vertical>false</Vertical>
+                    <Horizontal>true</Horizontal>
+                    <Vertical>true</Vertical>
                   </ResizeSupported>
                 </Window>
               </GameBarWidget>
@@ -109,7 +131,9 @@
         </uap3:Extension>
       </Extensions>
     </Application>
+
   </Applications>
+
   <Extensions>
     <!-- Enlighten COM on where to find Metadata Based Marshaling (MBM) data for the Game Bar private types 
        <Path> is a required element (by VS) and has to point to a binary in the package, but it's not used when the class id is
@@ -133,6 +157,7 @@
       </ProxyStub>
     </Extension>
   </Extensions>
+
   <Capabilities>
     <Capability Name="internetClient" />
   </Capabilities>
