@@ -68,14 +68,12 @@
                 </AppBarButton>
             </CommandBar>
 
-            <Rectangle Grid.Column="1"
-                       HorizontalAlignment="Stretch"
-                       Fill="{ThemeResource AppBarBorderThemeBrush}"/>
-            <TextBox
-                         Grid.Column="1" 
+            
+            <TextBox     Grid.Column="1" 
                          x:Name="SearchBox"
-                         VerticalAlignment="Stretch"
+                         VerticalAlignment="Center"
                          FontSize="16"
+                         HorizontalTextAlignment="Center"
                          PlaceholderText="Search with a search engine or enter address"
                          IsSpellCheckEnabled="False"
                          KeyDown="SearchBox_KeyDown"
@@ -137,6 +135,14 @@
                             <KeyboardAccelerator Modifiers="Control,Shift" Key="S"/>
                         </AppBarButton.KeyboardAccelerators>
                     </AppBarButton>
+                    <!-- Edge Dev Tools seems to cause BSOD... so ye... that's a disable -->
+                    <AppBarButton x:Name="DevToolsButton"
+                                  Icon="Admin"
+                                  Label="Dev Tools"                                 
+                                  ToolTipService.ToolTip="Show developer tools"
+                                  Click="DevToolsButton_Click"
+                                  Visibility="Collapsed">
+                    </AppBarButton>
                 </CommandBar.SecondaryCommands>
             </CommandBar>
         </Grid>
@@ -146,12 +152,12 @@
                  maybe the Tab just don't auto-stretch the vertical alignment or something? -->
             <Image Height="9999" Width="9999"/>
             <w:WebView2 x:Name="WebViewControl"
-                        Source="https://bing.com"
                         NavigationStarting="WebView_NavigationStarting"
                         NavigationCompleted="WebView_NavigationCompleted"
                         CoreProcessFailed="WebView_CoreProcessFailed"
                         WebMessageReceived="WebView_WebMessageReceived"
-                        CoreWebView2Initialized="WebView_Initialized"/>
+                        CoreWebView2Initialized="WebView_Initialized"
+                        PointerCaptureLost="WebViewControl_PointerCaptureLost"/>
         </Grid>
     </Grid>
 </Page>

@@ -1,8 +1,10 @@
 ﻿using Microsoft.Gaming.XboxGameBar;
 using Microsoft.UI.Xaml.Controls;
 using System;
+using System.Collections.Generic;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Navigation;
 
@@ -37,6 +39,69 @@ namespace GameBarBrowser2.Modules.Core
 
         public event Action<bool> FullscreenModeChanged;
 
+        public void CloseTab(BrowserView browserView) =>
+            CloseTab(browserView.Tab);
+
+        public void CloseTab(int tabIndex)
+        {
+            if (tabIndex >= 0 && tabIndex < TabView.TabItems.Count)
+            {
+                TabView.TabItems.RemoveAt(tabIndex);
+                CloseTab_Final();
+            }
+        }
+
+        public void CloseTab(TabViewItem tabViewItem)
+        {
+            if (TabView.TabItems.Remove(tabViewItem))
+                CloseTab_Final();
+        }
+
+        public void OpenNewTab(Uri uri = null, int tabIndex = -1, bool forceNoSwitch = false)
+        {
+            // If URI is null, use homepage URI.
+            if (uri == null)
+                uri = new Uri("https://bing.com");
+
+            var newTab = CreateNewTab(TabView.TabItems.Count, uri);
+
+            // If a valid tab index was requested, use it.
+            if (tabIndex >= 0 && tabIndex < TabView.TabItems.Count)
+            {
+                TabView.TabItems.Insert(tabIndex, newTab);
+
+                // If auto-switch to new tab enabled.
+                if (/* auto switch enabled && */ !forceNoSwitch)
+                    TabView.SelectedIndex = tabIndex;
+            }
+            // Add the tab at the end.
+            else
+            {
+                TabView.TabItems.Add(newTab);
+
+                // If auto-switch to new tab enabled.
+                if (/* auto switch enabled && */ !forceNoSwitch)
+                    TabView.SelectedIndex = TabView.TabItems.Count - 1;
+            }
+        }
+
+        public int GetIndexOfTabViewItem(TabViewItem tabViewItem)
+        {
+            return TabView.TabItems.IndexOf(tabViewItem);
+        }
+
+        private void CloseTab_Final()
+        {
+            // If 0 tabs = auto close, close the browser. Else, just create a new tab.
+            if (TabView.TabItems.Count == 0)
+            {
+                OpenNewTab();
+
+                // Forefully selects the first tab (as it's the only tab).
+                TabView.SelectedIndex = 0;
+            }
+        }
+
         // Essentially the start of this Page's lifetime.
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
@@ -53,7 +118,7 @@ namespace GameBarBrowser2.Modules.Core
             // Exit fullscreen button should only be present if the browser is being hovered over.
         }
 
-        private TabViewItem CreateNewTab(int index)
+        private TabViewItem CreateNewTab(int index, Uri uri)
         {
             var newTabItem = new TabViewItem
             {
@@ -61,13 +126,107 @@ namespace GameBarBrowser2.Modules.Core
                 IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Document }
             };
 
+            newTabItem.ContextFlyout = CreateTabFlyout(newTabItem);
+
             var frame = new Frame();
             frame.Navigate(typeof(BrowserView));
-            (frame.Content as BrowserView).BrowserWidget = this;
+
+            var browserView = frame.Content as BrowserView;
+            browserView.BrowserWidget = this;
+            browserView.InitialUri = uri;
+            browserView.Tab = newTabItem;
 
             newTabItem.Content = frame;
 
             return newTabItem;
+        }
+
+        private FlyoutBase CreateTabFlyout(TabViewItem tabViewItem = null)
+        {
+            var flyout = new MenuFlyout();
+
+            var newTabButton = new MenuFlyoutItem() { Text = "New tab", Icon = new SymbolIcon(Symbol.NewWindow) };
+            newTabButton.Click += delegate
+            {
+                OpenNewTab(null, GetIndexOfTabViewItem(tabViewItem) + 1);
+            };
+
+            flyout.Items.Add(newTabButton);
+            flyout.Items.Add(new MenuFlyoutSeparator());
+
+            if (tabViewItem != null)
+            {
+                var refreshTabButton = new MenuFlyoutItem() { Text = "Refresh tab", Icon = new SymbolIcon(Symbol.Refresh) };
+                refreshTabButton.Click += delegate
+                {
+                    var frame = tabViewItem.Content as Frame;
+                    var browserView = frame.Content as BrowserView;
+                    browserView.Refresh();
+                };
+
+                flyout.Items.Add(refreshTabButton);
+                flyout.Items.Add(new MenuFlyoutSeparator());
+
+                var closeTabButton = new MenuFlyoutItem() { Text = "Close tab", Icon = new SymbolIcon(Symbol.Cancel) };
+                closeTabButton.Click += delegate
+                {
+                    CloseTab(tabViewItem);
+                };
+
+                flyout.Items.Add(closeTabButton);
+
+                var closeOtherTabsButton = new MenuFlyoutItem() { Text = "Close all other tabs"};
+                closeOtherTabsButton.Click += delegate
+                {
+                    List<object> tabsToRemove = new List<object>();
+                    foreach (var tab in TabView.TabItems)
+                    {
+                        if (tab != tabViewItem)
+                            tabsToRemove.Add(tab);
+                    }
+
+                    foreach (var tab in tabsToRemove)
+                        CloseTab(tab as TabViewItem);
+                };
+
+                flyout.Items.Add(closeOtherTabsButton);
+
+                var closeTabsToRightButton = new MenuFlyoutItem() { Text = "Close tabs to right", Icon = new SymbolIcon(Symbol.DockRight) };
+                closeTabsToRightButton.Click += delegate
+                {
+                    for (var i = TabView.TabItems.Count - 1; i >= 0; i--)
+                    {
+                        if (TabView.TabItems[i] == tabViewItem)
+                            break;
+
+                        CloseTab(TabView.TabItems[i] as TabViewItem);
+                    }
+                };
+
+                flyout.Items.Add(closeTabsToRightButton);
+
+                var closeTabsToLeftButton = new MenuFlyoutItem() { Text = "Close tabs to left", Icon = new SymbolIcon(Symbol.DockLeft) };
+                closeTabsToLeftButton.Click += delegate
+                {
+                    int indexOfThisTab = GetIndexOfTabViewItem(tabViewItem);
+
+                    for (var i = indexOfThisTab - 1; i >= 0; i--)
+                        CloseTab(TabView.TabItems[i] as TabViewItem);
+                };
+
+                flyout.Items.Add(closeTabsToLeftButton);
+            }
+
+            var closeAllTabsButton = new MenuFlyoutItem() { Text = "Close all tabs", Icon = new SymbolIcon(Symbol.Cancel) };
+            closeAllTabsButton.Click += delegate
+            {
+                for (var i = TabView.TabItems.Count - 1; i >= 0; i--)
+                    CloseTab(TabView.TabItems[i] as TabViewItem);
+            };
+
+            flyout.Items.Add(closeAllTabsButton);
+
+            return flyout;
         }
 
         protected override void OnRequestedOpacityChanged(XboxGameBarWidget sender, object args)
@@ -90,35 +249,22 @@ namespace GameBarBrowser2.Modules.Core
 
         private void TabView_AddTabButtonClick(Microsoft.UI.Xaml.Controls.TabView sender, object args)
         {
-            sender.TabItems.Add(CreateNewTab(sender.TabItems.Count));
-            sender.SelectedIndex = sender.TabItems.Count - 1;
+            OpenNewTab();
         }
 
         private void TabView_TabCloseRequested(Microsoft.UI.Xaml.Controls.TabView sender, Microsoft.UI.Xaml.Controls.TabViewTabCloseRequestedEventArgs args)
         {
-            sender.TabItems.Remove(args.Tab);
-
-            // If 0 tabs = auto close, close the browser. Else, just create a new tab.
-            if (sender.TabItems.Count == 0)
-            {
-                // blah blah
-                sender.TabItems.Add(CreateNewTab(0));
-                sender.SelectedIndex = 0;
-            }
+            CloseTab(args.Tab);
         }
 
         private void TabView_Loaded(object sender, RoutedEventArgs e)
         {
-            (sender as TabView).TabItems.Add(CreateNewTab(0));
+            OpenNewTab();
         }
 
         private void NewTabKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (args.Element is TabView senderTabView)
-            {
-                senderTabView.TabItems.Add(CreateNewTab(senderTabView.TabItems.Count));
-                senderTabView.SelectedIndex = senderTabView.TabItems.Count - 1;
-            }
+            OpenNewTab();
 
             args.Handled = true;
         }
@@ -128,7 +274,7 @@ namespace GameBarBrowser2.Modules.Core
             var invokedTabView = args.Element as TabView;
 
             if (((TabViewItem)invokedTabView?.SelectedItem).IsClosable)
-                invokedTabView.TabItems.Remove(invokedTabView.SelectedItem);
+                CloseTab((TabViewItem)invokedTabView.SelectedItem);
 
             args.Handled = true;
         }
@@ -183,6 +329,11 @@ namespace GameBarBrowser2.Modules.Core
             await gameBarWidget.CenterWindowAsync();
 
             args.Handled = true;
+        }
+
+        private void BetaButton_Click(object sender, RoutedEventArgs e)
+        {
+            App.QueryInDefaultBrowser("https://github.com/dynamiquel/GameBarBrowser/issues");
         }
     }
 }

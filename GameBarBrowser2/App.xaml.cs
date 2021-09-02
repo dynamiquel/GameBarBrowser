@@ -182,5 +182,33 @@ namespace GameBarBrowser2
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+        public static async void QueryInDefaultBrowser(Uri uri)
+        {
+            if (!uri.IsAbsoluteUri)
+                return;
+
+            // Launch the URI
+            var success = await Windows.System.Launcher.LaunchUriAsync(uri);
+
+            if (success)
+            {
+                // URI launched
+            }
+            else
+            {
+                var dialog = new ContentDialog
+                {
+                    Title = "Cannot open browser",
+                    Content = "Your default browser could not be opened.",
+                    CloseButtonText = "Ok"
+                };
+
+                await dialog.ShowAsync();
+            }
+        }
+
+        public static void QueryInDefaultBrowser(string uri) =>
+            QueryInDefaultBrowser(new Uri(uri));
     }
 }

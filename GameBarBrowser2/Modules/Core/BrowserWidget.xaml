@@ -14,7 +14,9 @@
                    AddTabButtonClick="TabView_AddTabButtonClick"
                    TabCloseRequested="TabView_TabCloseRequested"
                    Loaded="TabView_Loaded"
-                   VerticalContentAlignment="Stretch">
+                   VerticalContentAlignment="Stretch"
+                   CanDrag="False"
+                   CanDragTabs="False">
             <w:TabView.KeyboardAccelerators>
                 <KeyboardAccelerator Key="T" Modifiers="Control" Invoked="NewTabKeyboardAccelerator_Invoked" />
                 <KeyboardAccelerator Key="W" Modifiers="Control" Invoked="CloseSelectedTabKeyboardAccelerator_Invoked" />
@@ -29,6 +31,19 @@
                 <KeyboardAccelerator Key="Number9" Modifiers="Control" Invoked="NavigateToNumberedTabKeyboardAccelerator_Invoked" />
                 <KeyboardAccelerator Key="F9" Invoked="CentreWidgetKeyboardAccelerator_Invoked" />
             </w:TabView.KeyboardAccelerators>
+            <w:TabView.TabStripHeader>
+                <Button Background="Transparent"
+                        BorderBrush="Transparent"
+                        UseSystemFocusVisuals="False"
+                        IsHoldingEnabled="False"
+                        Margin="4"
+                        Click="BetaButton_Click"
+                        ToolTipService.ToolTip="Report issues or contribute to development">
+                    <TextBlock VerticalAlignment="Center" 
+                               Style="{ThemeResource BaseTextBlockStyle}"
+                               Text="BETA"/>
+                </Button>
+            </w:TabView.TabStripHeader>
         </w:TabView>
     </Grid>
 </local:WidgetPage>
