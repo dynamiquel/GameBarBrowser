@@ -119,6 +119,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FileUtilities.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -128,13 +129,19 @@
     <Compile Include="Modules\Core\BrowserWidget.xaml.cs">
       <DependentUpon>BrowserWidget.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Search\ISearchEngine.cs" />
+    <Compile Include="Modules\Search\SearchEngines.cs" />
     <Compile Include="Modules\Core\WidgetPage.cs" />
     <Compile Include="Modules\Library\LibraryWidget.xaml.cs">
       <DependentUpon>LibraryWidget.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Settings\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Modules\Settings\SettingsWidget.xaml.cs">
       <DependentUpon>SettingsWidget.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Settings\UserSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -173,6 +180,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Modules\Settings\SettingsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Modules\Settings\SettingsWidget.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -187,6 +198,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
       <Version>2.7.0-prerelease.210827001</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

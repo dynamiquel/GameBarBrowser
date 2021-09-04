@@ -33,7 +33,7 @@ namespace GameBarBrowser2.Modules.Core
                 widgetDarkThemeBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 38, 38, 38));
                 widgetLightThemeBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 219, 219, 219));
 
-                // Hook up events for when the ui is updated.
+                // Hook up events for when the UI is updated.
                 gameBarWidget.SettingsClicked += OnSettingsClicked;
                 gameBarWidget.PinnedChanged += OnPinnedChanged;
                 gameBarWidget.FavoritedChanged += OnFavoritedChanged;

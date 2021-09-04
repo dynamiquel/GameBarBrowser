@@ -87,13 +87,17 @@
               <GameBarWidget Type="Settings">
                 <Window>
                   <Size>
-                    <Height>300</Height>
+                    <Height>600</Height>
                     <Width>300</Width>
-                    <MinHeight>100</MinHeight>
-                    <MinWidth>100</MinWidth>
+                    <MinHeight>300</MinHeight>
+                    <MinWidth>300</MinWidth>
                     <MaxHeight>Infinite</MaxHeight>
                     <MaxWidth>Infinite</MaxWidth>
                   </Size>
+                  <ResizeSupported>
+                    <Horizontal>true</Horizontal>
+                    <Vertical>true</Vertical>
+                  </ResizeSupported>
                 </Window>
               </GameBarWidget>
             </uap3:Properties>

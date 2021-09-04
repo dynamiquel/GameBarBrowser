@@ -131,7 +131,7 @@ namespace GameBarBrowser2.Modules.Core
                     uri = new Uri($"http://{query}");
                 // A search term (something)
                 else
-                    uri = new Uri(string.Format("https://www.bing.com/search?q={0}", query));
+                    uri = new Uri(string.Format(Search.SearchEngines.SelectedSearchEngine.Uri, query));
             }
 
             WebViewControl.CoreWebView2?.Navigate(uri.ToString());
