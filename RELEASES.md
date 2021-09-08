@@ -1,4 +1,13 @@
 # Releases
+## v3.0
+- Performance greatly increased by moving to Chromium.
+- URL Shortcuts can be disabled.
+- Can add or remove URL Shortcuts (currently, this can only be done by modifying the file at `C:\Users\[YOU]\AppData\Local\Packages\2ea47726-521a-4f31-b82a-cf75d01aab10_5p2e75xe8wwkt\RoamingState\Settings\Shortcuts.json`).
+- Can add or remove Search Engines (currently, this can only be done by modifying the file at `C:\Users\[YOU]\AppData\Local\Packages\2ea47726-521a-4f31-b82a-cf75d01aab10_5p2e75xe8wwkt\RoamingState\Settings\SearchEngines.json`).
+- Settings and Library are now in their own window instead of a tab.
+- Licence changed from Unlicense to MIT.
+- Minimum size decreased.
+
 ## v2.0.1
 - Fixed an issue that prevented typing in the Widget when a background app was selected.
 
