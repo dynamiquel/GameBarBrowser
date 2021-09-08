@@ -30,19 +30,9 @@
 
             <TextBlock Text="Search Engine" Margin="0,16,0,8"/>
             <ComboBox Name="searchEngineComboBox" 
-                      SelectedIndex="{x:Bind searchEngine}"
                       SelectionChanged="searchEngineComboBox_SelectionChanged" 
                       Loaded="searchEngineComboBox_Loaded"
-                      HorizontalAlignment="Stretch">
-                <ComboBox.Items>
-                    <ComboBoxItem Content="Bing"/>
-                    <ComboBoxItem Content="Google"/>
-                    <ComboBoxItem Content="DuckDuckGo"/>
-                    <ComboBoxItem Content="YouTube"/>
-                    <ComboBoxItem Content="Twitch"/>
-                    <ComboBoxItem Content="Baidu"/>
-                </ComboBox.Items>
-            </ComboBox>
+                      HorizontalAlignment="Stretch"/>
 
             <CheckBox Name="switchToNewTabsCheckBox"
                       Margin="0,16,0,8"
@@ -69,6 +59,14 @@
                       HorizontalAlignment="Stretch"
                       HorizontalContentAlignment="Right"
                       ToolTipService.ToolTip="Enabled: When visiting a webpage you have visited before, the previous history entry is updated instead of creating a new one."/>
+            <CheckBox Name="enableUriShortcuts"
+                      Margin="0,0,0,8"
+                      Click="enableUriShortcuts_Click"
+                      Content="Enable URL Shortcuts"
+                      FlowDirection="RightToLeft"
+                      HorizontalAlignment="Stretch"
+                      HorizontalContentAlignment="Right"
+                      ToolTipService.ToolTip="Enabled: By using '@[shortcut]' in the Search Box, you can quickly visit a website. Example: '@yt' goes to YouTube."/>
 
 
             <TextBlock Text="ABOUT" 

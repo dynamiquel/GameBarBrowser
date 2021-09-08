@@ -18,6 +18,7 @@ namespace GameBarBrowser2
 
         public static async Task<bool> SerialiseJson(string fileName, object obj)
         {
+            System.Diagnostics.Debug.WriteLine(RoamingFolder.Path);
             try
             {
                 string content = JsonConvert.SerializeObject(obj, Formatting.Indented);

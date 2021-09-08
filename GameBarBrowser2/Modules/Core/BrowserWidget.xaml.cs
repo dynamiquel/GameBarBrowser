@@ -61,7 +61,7 @@ namespace GameBarBrowser2.Modules.Core
         {
             // If URI is null, use homepage URI.
             if (uri == null)
-                uri = new Uri("https://bing.com");
+                uri = Utilities.UriFromQuery(Settings.Settings.General.HomeURL.ToString());
 
             var newTab = CreateNewTab(TabView.TabItems.Count, uri);
 
@@ -71,7 +71,7 @@ namespace GameBarBrowser2.Modules.Core
                 TabView.TabItems.Insert(tabIndex, newTab);
 
                 // If auto-switch to new tab enabled.
-                if (/* auto switch enabled && */ !forceNoSwitch)
+                if (Settings.Settings.General.SwitchToNewTab && !forceNoSwitch)
                     TabView.SelectedIndex = tabIndex;
             }
             // Add the tab at the end.
@@ -80,7 +80,7 @@ namespace GameBarBrowser2.Modules.Core
                 TabView.TabItems.Add(newTab);
 
                 // If auto-switch to new tab enabled.
-                if (/* auto switch enabled && */ !forceNoSwitch)
+                if (Settings.Settings.General.SwitchToNewTab && !forceNoSwitch)
                     TabView.SelectedIndex = TabView.TabItems.Count - 1;
             }
         }
@@ -122,7 +122,7 @@ namespace GameBarBrowser2.Modules.Core
         {
             var newTabItem = new TabViewItem
             {
-                Header = $"Tab {index}",
+                Header = $"New tab",
                 IconSource = new Microsoft.UI.Xaml.Controls.SymbolIconSource() { Symbol = Symbol.Document }
             };
 

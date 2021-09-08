@@ -105,37 +105,17 @@ namespace GameBarBrowser2.Modules.Core
 
         private void GoHome()
         {
-            Query("https://bing.com");
+            Navigate(Settings.Settings.General.HomeURL);
         }
 
-        private async void Query(string query)
+        private void Navigate(string query)
         {
-            Uri uri;
-
-            // If the shortcut prefix was used, attempt to get the URI for the given shortcut.
-            //if (query.StartsWith(ShortcutHandler.NormalShortcuts.Prefix))
-            //    query = ShortcutHandler.NormalShortcuts.GetUri(query);
-
-            // A full URL (https://something.com)
-            if (Uri.IsWellFormedUriString(query, UriKind.Absolute))
-            {
-                uri = new Uri(query);
-            }
-            else
-            {
-                var validUrlPattern = @"^[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$";
-                var validUrlRgx = new Regex(validUrlPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-                // A partial URL (something.com)
-                if (validUrlRgx.IsMatch(query))
-                    uri = new Uri($"http://{query}");
-                // A search term (something)
-                else
-                    uri = new Uri(string.Format(Search.SearchEngines.SelectedSearchEngine.Uri, query));
-            }
+            var uri = Utilities.UriFromQuery(query);
 
             WebViewControl.CoreWebView2?.Navigate(uri.ToString());
         }
+
+        
 
         private void UpdateUI()
         {
@@ -236,7 +216,7 @@ namespace GameBarBrowser2.Modules.Core
         {
             // Attempts to navigate to the given URL when the Enter key is pressed.
             if (e.Key == Windows.System.VirtualKey.Enter)
-                Query((sender as TextBox).Text);
+                Navigate((sender as TextBox).Text);
         }
 
         private void SearchBox_GotFocus(object sender, RoutedEventArgs e)
@@ -248,7 +228,7 @@ namespace GameBarBrowser2.Modules.Core
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             // Attempts to navigate to the given URL when the Search button is pressed.
-            Query(SearchBox.Text);
+            Navigate(SearchBox.Text);
         }
 
         private async void LibraryButton_Click(object sender, RoutedEventArgs e)
@@ -332,7 +312,7 @@ namespace GameBarBrowser2.Modules.Core
             sender.CoreWebView2.ContentLoading += WebView_ContentLoading;
 
             if (InitialUri != null)
-                Query(InitialUri.ToString());
+                Navigate(InitialUri.ToString());
         }
 
         private void WebView_ContentLoading(CoreWebView2 sender, CoreWebView2ContentLoadingEventArgs args)
