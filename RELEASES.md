@@ -7,6 +7,7 @@
 - Settings and Library are now in their own window instead of a tab.
 - Licence changed from Unlicense to MIT.
 - Minimum size decreased.
+- Recentre browser shortcut added (F9).
 
 ## v2.0.1
 - Fixed an issue that prevented typing in the Widget when a background app was selected.
